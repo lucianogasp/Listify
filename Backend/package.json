@@ -10,6 +10,16 @@
   "author": "",
   "license": "ISC",
   "type": "module",
+  "imports": {
+    "#routes/*": "./src/routes/*",
+    "#controllers/*": "./src/controllers/*",
+    "#services/*": "./src/services/*",
+    "#repositories/*": "./src/repositories/*",
+    "#config/*": "./src/config/*",
+    "#middlewares/*": "./src/middlewares/*",
+    "#schemas/*": "./src/schemas/*",
+    "#errors/*": "./src/errors/*"
+  },
   "dependencies": {
     "cors": "^2.8.6",
     "dotenv": "^17.4.2",
