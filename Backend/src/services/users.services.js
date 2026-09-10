@@ -1,13 +1,29 @@
 import bcrypt from 'bcrypt';
-import { getUserByEmailRepository } from "#repositories/users.repositories.js";
-import { userRegisterRepository } from "#repositories/users.repositories.js";
+import { 
+  getUserByEmailRepository,
+  userRegisterRepository
+} from "#repositories/users.repositories.js";
 
 export const userRegisterService = async (newUser) => {
   const {email, password} = newUser;
   const userByEmail = await getUserByEmailRepository(email);
-  if(userByEmail) throw new Error(`User with email ${email} already exists!`);
+  if(userByEmail) throw new Error(`User with this email already exists!`);
   
   const hash = await bcrypt.hash(password, 10);
   const userRegistered = await userRegisterRepository(email, hash);
+
+  // Logic to create Authentication Token
   return userRegistered;
+}
+
+export const userLoginService = async (newUser) => {
+  const {email, password} = newUser;
+  const userByEmail = await getUserByEmailRepository(email);
+  if(!userByEmail) throw new Error(`Invalid Email or Password!`);
+
+  const isHashValid = await bcrypt.compare(password, userByEmail.password);
+  if(!isHashValid) throw new Error(`Invalid Email or Password  !!!`);
+  
+  // Logic to create Authentication Token
+  return { message: 'Login successful', ...userByEmail }
 }
