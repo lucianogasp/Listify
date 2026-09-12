@@ -12,7 +12,7 @@ db.run(
   `
 );
 
-export const getListsByUserRepository = (userId) => {
+export const getListsByUserIdRepository = (userId) => {
   return new Promise((res, rej) => {
     db.all(
       `
@@ -24,8 +24,6 @@ export const getListsByUserRepository = (userId) => {
         if(err) {
           rej(err);
         } else {
-          console.log(userId);
-          console.log(rows);
           res(rows);
         }
       }

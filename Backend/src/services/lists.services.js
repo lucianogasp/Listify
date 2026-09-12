@@ -1,6 +1,6 @@
-import { getListsByUserRepository } from '#repositories/lists.repositories.js';
+import { getListsByUserIdRepository } from '#repositories/lists.repositories.js';
 
-export const getListsByUserService = async (userId) => {
-  const userLists = await getListsByUserRepository(userId);
+export const getListsByUserIdService = async (userId) => {
+  const userLists = await getListsByUserIdRepository(userId);
   return userLists;
 }

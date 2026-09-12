@@ -3,10 +3,10 @@ import { userLoginController, userRegisterController } from '#controllers/users.
 
 const router = Router();
 
-// POST /register >> INSERT INTO users (email, password); encript password
+// INSERT INTO users (email, password); encript password
 router.post('/register', userRegisterController);
 
-// POST /login >> SELECT email, password FROM users; compare encript password and email
+// SELECT email, password FROM users; compare encript password and email
 router.post('/login', userLoginController);
 
 export default router;
