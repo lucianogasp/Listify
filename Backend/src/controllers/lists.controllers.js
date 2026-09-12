@@ -14,8 +14,8 @@ export const createListController = async (req, res) => {
   const userId = req.userId || 1; // implementar userId em payload durante jwt midd auth
   const newList = req.body;
   try {
-    const createdList = await createListService({userId, ...newList});
-    return res.status(201).json({createdList});
+    const list_id = await createListService({userId, ...newList});
+    return res.status(201).json({list_id});
   } catch(err) {
     return res.status(500).json({message: err.message});
   }

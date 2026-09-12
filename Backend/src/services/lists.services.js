@@ -6,6 +6,6 @@ export const getListsByUserIdService = async (userId) => {
 }
 
 export const createListService = async (newList) => {
-  const createdList = await createListRepository(newList);
-  return createdList;
+  const list_id = await createListRepository(newList);
+  return list_id;
 }
