@@ -30,3 +30,23 @@ export const getListsByUserIdRepository = (userId) => {
     );
   });
 }
+
+export const createListRepository = (newList) => {
+  const {userId, name, description} = newList;
+  return new Promise((res, rej) => {
+    db.run(
+      `
+        INSERT INTO lists (user_id, name, description)
+        VALUES (?, ?, ?)
+      `
+      ,[userId, name, description]
+      ,function(err) {
+        if(err) {
+          rej(err);
+        } else {
+          res({message: 'list created successfully',id: this.lastID});
+        }
+      }
+    )
+  });
+}
