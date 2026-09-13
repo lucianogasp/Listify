@@ -4,9 +4,9 @@ import { getItemsByUserIdController, createItemController } from "#controllers/i
 const router = Router();
 
 // SELECT items.* FROM items JOIN lists ON ... associated to an user_id
-router.get('/items', getItemsByUserIdController);
+router.get('/lists/items', getItemsByUserIdController);
 
 // INSERT INTO items new records
-router.post('/items', createItemController);
+router.post('/lists/:list_id/items', createItemController);
 
 export default router;
