@@ -7,7 +7,7 @@
     "dev": "nodemon ./src/index.js",
     "start": "node ./src/index.js",
     "postinstall": "npm rebuild sqlite3 --build-from-source",
-    "test": "jest --passWithNoTests"
+    "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js"
   },
   "keywords": [],
   "author": "",

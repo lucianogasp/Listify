@@ -1,4 +1,4 @@
-import { getListsByUserIdService } from "#services/lists.services.js"
+import {jest} from "@jest/globals";
 
 describe('getListsByUserIdService', () => {
   it('should return the an array of lists from repository database', async () => {
