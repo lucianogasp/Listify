@@ -10,7 +10,7 @@ db.run(
   `
 );
 
-export const getUserByEmailRepository = email => {
+const getUserByEmail = email => {
   return new Promise((res, rej) => {
     db.get(
       `
@@ -29,7 +29,7 @@ export const getUserByEmailRepository = email => {
   });
 }
 
-export const userRegisterRepository = (email, hash) => {
+ const userRegister = (email, hash) => {
   return new Promise((res, rej) => {
     db.run(
       `
@@ -46,4 +46,9 @@ export const userRegisterRepository = (email, hash) => {
       }
     )
   });
+}
+
+export default {
+  getUserByEmail,
+  userRegister
 }

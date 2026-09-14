@@ -1,26 +1,26 @@
-import {
-  userRegisterRepository
-} from "#repositories/users.repositories.js";
+// import modules
+import userRepository from "#repositories/users.repositories.js";
 
+// import classes
 import { UserQuery } from './UserQuery.js';
 import { UserEncryption } from "./UserEncription.js";
 
 const userQuery = new UserQuery();
 const userEncription = new UserEncryption();
 
-export const userRegisterService = async (newUser) => {
+export const userRegister = async (newUser) => {
   const {email, password} = newUser;
   const userByEmail = await userQuery.asyncFindByEmail(email);
   if(userByEmail) throw new Error(`User with this email already exists!`);
   
   const hash = await userEncription.asyncGenerateHash(password);
-  const userRegistered = await userRegisterRepository(email, hash);
+  const userRegistered = await userRepository.userRegister(email, hash);
 
   // Logic to create Authentication Token
   return userRegistered;
 }
 
-export const userLoginService = async (newUser) => {
+export const userLogin = async (newUser) => {
   const {email, password} = newUser;
   const userByEmail = await userQuery.asyncFindByEmail(email);
   if(!userByEmail) throw new Error(`Invalid Email or Password!`);
@@ -30,4 +30,9 @@ export const userLoginService = async (newUser) => {
   
   // Logic to create Authentication Token
   return { message: 'Login successful', ...userByEmail }
+}
+
+export default {
+  userRegister,
+  userLogin
 }

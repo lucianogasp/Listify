@@ -12,7 +12,7 @@ db.run(
   `
 );
 
-export const getListsByUserIdRepository = (userId) => {
+export const getListsByUserId = (userId) => {
   return new Promise((res, rej) => {
     db.all(
       `
@@ -31,7 +31,7 @@ export const getListsByUserIdRepository = (userId) => {
   });
 }
 
-export const createListRepository = (newList) => {
+export const createList = (newList) => {
   const {userId, name, description} = newList;
   return new Promise((res, rej) => {
     db.run(
@@ -49,4 +49,9 @@ export const createListRepository = (newList) => {
       }
     )
   });
+}
+
+export default {
+  getListsByUserId,
+  createList
 }

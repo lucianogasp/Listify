@@ -1,12 +1,13 @@
+// import modules
 import { Router } from "express";
-import { userLoginController, userRegisterController } from '#controllers/users.controllers.js';
+import userController from '#controllers/users.controllers.js';
 
 const router = Router();
 
 // INSERT INTO users (email, password); encript password
-router.post('/register', userRegisterController);
+router.post('/register', userController.userRegister);
 
 // SELECT email, password FROM users; compare encript password and email
-router.post('/login', userLoginController);
+router.post('/login', userController.userLogin);
 
 export default router;

@@ -1,11 +1,16 @@
-import { getListsByUserIdRepository, createListRepository } from '#repositories/lists.repositories.js';
+import listsRepository from '#repositories/lists.repositories.js';
 
-export const getListsByUserIdService = async (userId) => {
-  const userLists = await getListsByUserIdRepository(userId);
+export const getListsByUserId = async (userId) => {
+  const userLists = await listsRepository.getListsByUserId(userId);
   return userLists;
 }
 
-export const createListService = async (newList) => {
-  const list_id = await createListRepository(newList);
+export const createList = async (newList) => {
+  const list_id = await listsRepository.createList(newList);
   return list_id;
+}
+
+export default {
+  getListsByUserId,
+  createList
 }

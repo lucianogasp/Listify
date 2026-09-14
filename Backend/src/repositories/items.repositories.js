@@ -13,7 +13,7 @@ db.run(
   `
 );
 
-export const getItemsByUserIdRepository = (userId) => {
+export const getItemsByUserId = (userId) => {
   return new Promise((res, rej) => {
     db.all(
       `
@@ -34,7 +34,7 @@ export const getItemsByUserIdRepository = (userId) => {
   });
 }
 
-export const createItemRepository = (newItem) => {
+export const createItem = (newItem) => {
   const {list_id, title, is_prioritized, status} = newItem;
   return new Promise((res, rej) => {
     db.run(
@@ -52,4 +52,9 @@ export const createItemRepository = (newItem) => {
       }
     )
   });
+}
+
+export default {
+  getItemsByUserId,
+  createItem
 }

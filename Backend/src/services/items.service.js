@@ -1,11 +1,16 @@
-import { getItemsByUserIdRepository, createItemRepository } from "#repositories/items.repositories.js";
+import itemsRepository from "#repositories/items.repositories.js";
 
-export const getItemsByUserIdService = async (userId) => {
-  const userItems = await getItemsByUserIdRepository(userId);
+export const getItemsByUserId = async (userId) => {
+  const userItems = await itemsRepository.getItemsByUserId(userId);
   return userItems;
 }
 
-export const createItemService = async (newItem) => {
-  const item_id = await createItemRepository(newItem);
+export const createItem = async (newItem) => {
+  const item_id = await itemsRepository.createItem(newItem);
   return item_id;
+}
+
+export default {
+  getItemsByUserId,
+  createItem
 }
