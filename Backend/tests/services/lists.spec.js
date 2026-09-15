@@ -20,12 +20,12 @@ describe('Testing listsService.getListByUserId', () => {
     const userId = 1;
     const mockTimes = 1;
 
-    const { default: listsRepository } = await import('#repositories/lists.repositories.js');
+    const {default: listsRepository} = await import('#repositories/lists.repositories.js');
     listsRepository.getListsByUserId.mockResolvedValue([
-      {id: 1, user_id: 1, name: "compras", description: "lista de compras"},
-      {id: 2, user_id: 1, name: "trabalho", description: "lista de pendências"}
+      { id: 1, user_id: 1, name: "compras", description: "lista de compras" },
+      { id: 2, user_id: 1, name: "trabalho", description: "lista de pendências" }
     ]);
-    const { default: listsService } = await import('#services/lists.services.js');
+    const {default: listsService} = await import('#services/lists.services.js');
     
     // Act
     const result = await listsService.getListsByUserId(userId);
@@ -36,8 +36,8 @@ describe('Testing listsService.getListByUserId', () => {
     expect(listsRepository.getListsByUserId).toHaveBeenCalledTimes(mockTimes);
 
     expect(result).toEqual([
-      {id: 1, user_id: 1, name: "compras", description: "lista de compras"},
-      {id: 2, user_id: 1, name: "trabalho", description: "lista de pendências"}
+      { id: 1, user_id: 1, name: "compras", description: "lista de compras" },
+      { id: 2, user_id: 1, name: "trabalho", description: "lista de pendências" }
     ]);
   });
 
@@ -47,9 +47,9 @@ describe('Testing listsService.getListByUserId', () => {
     const userId = 999;
     const mockTimes = 1;
 
-    const { default: listsRepository } = await import('#repositories/lists.repositories.js');
+    const {default: listsRepository} = await import('#repositories/lists.repositories.js');
     listsRepository.getListsByUserId.mockResolvedValue([]);
-    const { default: listsService } = await import('#services/lists.services.js');
+    const {default: listsService} = await import('#services/lists.services.js');
 
     // Act
     const result = await listsService.getListsByUserId(userId);
@@ -71,11 +71,11 @@ describe('Testing listsService.createList', () => {
     const newList = { name: "Name test", description: "description test" };
     const mockTimes = 1;
 
-    const { default: listsRepository } = await import('#repositories/lists.repositories.js');
+    const {default: listsRepository} = await import('#repositories/lists.repositories.js');
     listsRepository.createList.mockResolvedValue(
-      {message: "list created successfully", id: 4}
+      { message: "list created successfully", id: 4 }
     );
-    const { default: listsService } = await import('#services/lists.services.js');
+    const {default: listsService} = await import('#services/lists.services.js');
 
     // Act
     const result = await listsService.createList(newList);
