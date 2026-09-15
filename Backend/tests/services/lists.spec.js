@@ -1,24 +1,24 @@
-import { expect, jest } from "@jest/globals";
+import { describe, expect, jest } from "@jest/globals";
 
-describe('listsService.getListsByUserId', () => {
-
-  jest.unstable_mockModule(
-    '#repositories/lists.repositories.js',
-    () => {
-      return {
-        default: {
-          getListsByUserId: jest.fn()
-        }
+jest.unstable_mockModule(
+  '#repositories/lists.repositories.js',
+  () => {
+    return {
+      default: {
+        getListsByUserId: jest.fn(),
+        createList: jest.fn()
       }
     }
-  );
+  }
+);
 
+describe('Testing listsService.getListByUserId', () => {
 
   it('should return an array of lists from repository', async () => {
 
     // Arrangement
     const userId = 1;
-    const times = 1;
+    const mockTimes = 1;
 
     const { default: listsRepository } = await import('#repositories/lists.repositories.js');
     listsRepository.getListsByUserId.mockResolvedValue([
@@ -33,7 +33,7 @@ describe('listsService.getListsByUserId', () => {
     // Assertion
     expect(listsRepository.getListsByUserId).toHaveBeenCalled();
     expect(listsRepository.getListsByUserId).toHaveBeenCalledWith(userId);
-    expect(listsRepository.getListsByUserId).toHaveBeenCalledTimes(times);
+    expect(listsRepository.getListsByUserId).toHaveBeenCalledTimes(mockTimes);
 
     expect(result).toEqual([
       {id: 1, user_id: 1, name: "compras", description: "lista de compras"},
@@ -45,7 +45,7 @@ describe('listsService.getListsByUserId', () => {
 
     // Arrengement
     const userId = 999;
-    const times = 1;
+    const mockTimes = 1;
 
     const { default: listsRepository } = await import('#repositories/lists.repositories.js');
     listsRepository.getListsByUserId.mockResolvedValue([]);
@@ -57,8 +57,36 @@ describe('listsService.getListsByUserId', () => {
     // Assertion
     expect(listsRepository.getListsByUserId).toHaveBeenCalled();
     expect(listsRepository.getListsByUserId).toHaveBeenCalledWith(userId);
-    expect(listsRepository.getListsByUserId).toHaveBeenCalledTimes(times);
+    expect(listsRepository.getListsByUserId).toHaveBeenCalledTimes(mockTimes);
 
     expect(result).toEqual([]);
+  });
+});
+
+describe('Testing listsService.createList', () => {
+
+  it('should return an object containing a success message and id of a created list', async () => {
+
+    // Arrangement
+    const newList = { name: "Name test", description: "description test" };
+    const mockTimes = 1;
+
+    const { default: listsRepository } = await import('#repositories/lists.repositories.js');
+    listsRepository.createList.mockResolvedValue(
+      {message: "list created successfully", id: 4}
+    );
+    const { default: listsService } = await import('#services/lists.services.js');
+
+    // Act
+    const result = await listsService.createList(newList);
+
+    // Assertion
+    expect(listsRepository.createList).toHaveBeenCalled();
+    expect(listsRepository.createList).toHaveBeenCalledWith(newList);
+    expect(listsRepository.createList).toHaveBeenCalledTimes(mockTimes);
+
+    expect(result).toEqual(
+      { message: "list created successfully", id: 4 }
+    );
   });
 });
