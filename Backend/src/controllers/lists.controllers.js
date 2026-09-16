@@ -1,6 +1,6 @@
 import listsService from "#services/lists.services.js";
 
-export const getListsByUserId = async (req, res) => {
+const getListsByUserId = async (req, res) => {
   const userId = req.userId || 1; // implementar userId em payload durante jwt midd auth
   try {
     const userLists = await listsService.getListsByUserId(userId);
@@ -10,7 +10,7 @@ export const getListsByUserId = async (req, res) => {
   }
 }
 
-export const createList = async (req, res) => {
+const createList = async (req, res) => {
   const userId = req.userId || 1; // implementar userId em payload durante jwt midd auth
   const newList = req.body;
   try {

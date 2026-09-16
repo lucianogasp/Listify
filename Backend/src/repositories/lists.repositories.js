@@ -12,7 +12,7 @@ db.run(
   `
 );
 
-export const getListsByUserId = (userId) => {
+const getListsByUserId = (userId) => {
   return new Promise((res, rej) => {
     db.all(
       `
@@ -31,7 +31,7 @@ export const getListsByUserId = (userId) => {
   });
 }
 
-export const createList = (newList) => {
+const createList = (newList) => {
   const {userId, name, description} = newList;
   return new Promise((res, rej) => {
     db.run(

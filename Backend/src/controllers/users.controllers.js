@@ -1,6 +1,6 @@
 import userService from "#services/users.services.js";
 
-export const userRegister = async (req, res) => {
+const userRegister = async (req, res) => {
   const newUser = req.body;
   try {
     const userRegistered = await userService.userRegister(newUser);
@@ -10,7 +10,7 @@ export const userRegister = async (req, res) => {
   }
 }
 
-export const userLogin = async (req, res) => {
+const userLogin = async (req, res) => {
   const newUser = req.body;
   try {
     const loginMessage = await userService.userLogin(newUser);

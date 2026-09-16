@@ -29,7 +29,7 @@ const getUserByEmail = email => {
   });
 }
 
- const userRegister = (email, hash) => {
+const userRegister = (email, hash) => {
   return new Promise((res, rej) => {
     db.run(
       `

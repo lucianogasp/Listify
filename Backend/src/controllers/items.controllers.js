@@ -1,6 +1,6 @@
 import itemsService from "#services/items.service.js";
 
-export const getItemsByUserId = async (req, res) => {
+const getItemsByUserId = async (req, res) => {
   const userId = req.userId || 1; // implementar userId em payload durante jwt midd auth
   try {
     const userItems = await itemsService.getItemsByUserId(userId);
@@ -10,7 +10,7 @@ export const getItemsByUserId = async (req, res) => {
   }
 }
 
-export const createItem = async (req, res) => {
+const createItem = async (req, res) => {
   const {list_id} = req.params;
   const newItem = req.body;
   try {
