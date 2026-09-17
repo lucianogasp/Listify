@@ -15,11 +15,9 @@ const createList = async (newList) => {
 
 const deleteList = async (list_id, userId) => {
   const list = await listQuery.asyncGetListById(list_id);
-  console.log(list);
   if(!list) throw new Error('list does not exists to be deleted!');
 
   const message = await listsRepository.deleteList(list_id, userId);
-  console.log({...message, ...list});
   return {...message, ...list};
 }
 

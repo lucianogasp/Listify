@@ -68,7 +68,7 @@ describe('Testing userService.userRegister', () => {
     });
   });
 
-  it('should return an object with an alert message if findByEmail returns a register', async () => {
+  it('should throw an Error with an object alert message if findByEmail returns a register', async () => {
 
     // Arrangement
     const newUser = { email: 'lucianogasp1@gmail.com', password: '123' };
@@ -126,7 +126,7 @@ describe('Testing userService.userLogin', () => {
     });
   });
 
-  it('should return an object with an alert message if findByEmail return undefined,', async () => {
+  it('should throw an Error with an object alert message if findByEmail return undefined,', async () => {
 
     // Arrangement
     const newUser = { email: "lucianogasp999@gmail", password: '123' };
@@ -146,7 +146,7 @@ describe('Testing userService.userLogin', () => {
     expect(mockUserQuery.asyncFindByEmail).toHaveBeenCalledTimes(mockTimes);
   });
 
-  it('should return an object with an alert message if password does not match correctly the one in the database', async () => {
+  it('should throw an Error with an object alert message if password does not match correctly the one in the database', async () => {
 
     // Arrangement
     const newUser = { email: "lucianogasp1@gmail.com", password: 'incorrect' };
