@@ -31,6 +31,25 @@ const getListsByUserId = (userId) => {
   });
 }
 
+const getListById = (list_id) => {
+  return new Promise((res, rej) => {
+    db.get(
+      `
+        SELECT * FROM lists
+        WHERE id = ?
+      `
+      ,[list_id]
+      ,(err, row) => {
+        if(err) {
+          rej(err);
+        } else {
+          res(row);
+        }
+      }
+    );
+  });
+}
+
 const createList = (newList) => {
   const {userId, name, description} = newList;
   return new Promise((res, rej) => {
@@ -44,14 +63,36 @@ const createList = (newList) => {
         if(err) {
           rej(err);
         } else {
-          res({message: 'list created successfully',id: this.lastID});
+          res({message: 'list created successfully', id: this.lastID});
         }
       }
     )
   });
 }
 
+const deleteList = (list_id, userId) => {
+  return new Promise((res, rej) => {
+    db.run(
+      `
+        DELETE FROM lists
+        WHERE id = ?
+          AND user_id = ?
+      `
+      ,[list_id, userId]
+      ,(err) => {
+        if(err) {
+          rej(err);
+        } else {
+          res({message: 'list deleted successfully!'});
+        }
+      }
+    );
+  });
+}
+
 export default {
   getListsByUserId,
-  createList
+  getListById,
+  createList,
+  deleteList
 }

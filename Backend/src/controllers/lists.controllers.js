@@ -21,7 +21,19 @@ const createList = async (req, res) => {
   }
 }
 
+const deleteList = async (req, res) => {
+  const userId = req.userId || 1; // implementar userId em payload durante jwt midd auth
+  const {list_id} = req.params;
+  try {
+    const deletedList = await listsService.deleteList(list_id, userId);
+    return res.status(200).json(deletedList);
+  } catch(err) {
+    return res.status(500).json({message: err.message});
+  }
+}
+
 export default {
   getListsByUserId,
-  createList
+  createList,
+  deleteList
 }
