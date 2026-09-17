@@ -9,7 +9,7 @@ router.get('/lists', listsController.getListsByUserId);
 // INSERT INTO lists new records
 router.post('/lists', listsController.createList);
 
-// DELETE lists associaed to an user_id
+// DELETE FROM lists WHERE id associated to an user_id
 router.delete('/lists/:list_id', listsController.deleteList);
 
 export default router;

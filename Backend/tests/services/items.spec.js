@@ -94,3 +94,10 @@ describe('Testing itemsService.createItem', () => {
     );
   });
 });
+
+// describe('Testing itemsService.deleteItem', () => {
+
+//   it('should return an object containing the item deleted form repository');
+//   it('should throw an Error with an object alert message if getListById return undefined');
+//   it('should throw an Error with an object alert message if getItemById return undefined');
+// });

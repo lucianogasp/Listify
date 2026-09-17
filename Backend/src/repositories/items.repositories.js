@@ -30,7 +30,26 @@ const getItemsByUserId = (userId) => {
           res(rows);
         }
       }
-    )
+    );
+  });
+}
+
+const getItemById = (item_id) => {
+  return new Promise((res, rej) => {
+    db.get(
+      `
+        SELECT * FROM items
+        WHERE id = ?
+      `
+      ,[item_id]
+      ,(err, row) => {
+        if(err) {
+          rej(err);
+        } else {
+          res(row);
+        }
+      }
+    );
   });
 }
 
@@ -50,11 +69,38 @@ const createItem = (newItem) => {
           res({message: 'item created successfully',id: this.lastID});
         }
       }
-    )
+    );
+  });
+}
+
+const deleteItem = (item_id, list_id, userId) => {
+  return new Promise((res, rej) => {
+    db.run(
+      `
+        DELETE FROM items
+        WHERE id = ?
+          AND list_id = ?
+          AND EXISTS(
+            SELECT 1 FROM lists
+            WHERE lists.id = items.list_id
+              AND lists.user_id = ?
+          )
+      `
+      ,[item_id, list_id, userId]
+      ,(err) => {
+        if(err) {
+          rej(err);
+        } else {
+          res({message: 'item deleted successfully!'})
+        }
+      }
+    );
   });
 }
 
 export default {
   getItemsByUserId,
-  createItem
+  getItemById,
+  createItem,
+  deleteItem
 }

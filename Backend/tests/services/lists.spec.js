@@ -143,7 +143,7 @@ describe("Testing listsService.deleteList", () => {
     });
   });
 
-  it('should throw an Error with an object alert message if getLIstById return undefined', async () => {
+  it('should throw an Error with an object alert message if getListById return undefined', async () => {
 
     // Arrangement
     const list_id = 999;

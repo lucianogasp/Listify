@@ -66,7 +66,7 @@ const createList = (newList) => {
           res({message: 'list created successfully', id: this.lastID});
         }
       }
-    )
+    );
   });
 }
 

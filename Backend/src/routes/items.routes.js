@@ -9,4 +9,7 @@ router.get('/lists/items', itemsController.getItemsByUserId);
 // INSERT INTO items new records
 router.post('/lists/:list_id/items', itemsController.createItem);
 
+// DELETE FROM items WHERE id AND list_id AND EXISTS ... associated to an user_id
+router.delete('/lists/:list_id/items/:item_id', itemsController.deleteItem);
+
 export default router;
