@@ -19,7 +19,7 @@ const userRegister = async (newUser) => {
   const userRegistered = await userRepository.userRegister(email, hash);
 
   const token = authToken.generateJWT(userRegistered.id);
-  return token;
+  return { token };
 }
 
 const userLogin = async (newUser) => {
@@ -31,7 +31,7 @@ const userLogin = async (newUser) => {
   if(!isHashValid) throw new Error(`Invalid Email or Password!`);
   
   const token = authToken.generateJWT(userByEmail.id);
-  return token;
+  return { token };
 }
 
 export default {

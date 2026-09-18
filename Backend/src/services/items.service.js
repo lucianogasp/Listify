@@ -10,8 +10,8 @@ const getItemsByUserId = async (userId) => {
   return userItems;
 }
 
-const createItem = async (newItem) => {
-  const item_id = await itemsRepository.createItem(newItem);
+const createItem = async (list_id, newItem) => {
+  const item_id = await itemsRepository.createItem(list_id, newItem);
   return item_id;
 }
 

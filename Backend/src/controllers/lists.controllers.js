@@ -33,7 +33,7 @@ const deleteList = async (req, res) => {
 }
 
 const updateList = async (req, res) => {
-  const userId = req.userId || 1;
+  const userId = req.userId || 1; // implementar userId em payload durante jwt midd auth
   const {list_id} = req.params;
   const updateFields = req.body;
   try {

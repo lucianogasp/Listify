@@ -60,8 +60,8 @@ const getItemById = (item_id, list_id, userId) => {
   });
 }
 
-const createItem = (newItem) => {
-  const {list_id, title, is_prioritized, status} = newItem;
+const createItem = (list_id, newItem) => {
+  const {title, is_prioritized, status} = newItem;
   return new Promise((res, rej) => {
     db.run(
       `
@@ -73,7 +73,7 @@ const createItem = (newItem) => {
         if(err) {
           rej(err);
         } else {
-          res({message: 'item created successfully',id: this.lastID});
+          res({message: 'item created successfully', id: this.lastID});
         }
       }
     );

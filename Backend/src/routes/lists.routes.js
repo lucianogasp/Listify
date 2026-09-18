@@ -1,10 +1,11 @@
 import { Router } from 'express';
+import { authMiddleware } from '#middlewares/auth.middleware.js';
 import listsController from '#controllers/lists.controllers.js';
 
 const router = Router();
 
 // SELECT * FROM lists associated to an user_id
-router.get('/lists', listsController.getListsByUserId);
+router.get('/lists', authMiddleware, listsController.getListsByUserId);
 
 // INSERT INTO lists new records
 router.post('/lists', listsController.createList);

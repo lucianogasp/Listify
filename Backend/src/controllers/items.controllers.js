@@ -14,7 +14,7 @@ const createItem = async (req, res) => {
   const {list_id} = req.params;
   const newItem = req.body;
   try {
-    const item_id = await itemsService.createItem({list_id, ...newItem});
+    const item_id = await itemsService.createItem(list_id, newItem);
     return res.status(201).json({item_id});
   } catch(err) {
     return res.status(500).json({message: err.message});
