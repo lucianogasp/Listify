@@ -14,7 +14,8 @@ jest.unstable_mockModule(
       default: {
         getItemsByUserId: jest.fn(),
         createItem: jest.fn(),
-        deleteItem: jest.fn()
+        deleteItem: jest.fn(),
+        updateItem: jest.fn()
       }
     }
   }
@@ -147,10 +148,10 @@ describe('Testing itemsService.deleteItem', () => {
     const result = await itemsServices.deleteItem(item_id, list_id, userId);
 
     // Assertion
-    expect(mockAsyncGetListById.asyncGetListById).toHaveBeenCalledWith(list_id);
+    expect(mockAsyncGetListById.asyncGetListById).toHaveBeenCalledWith(list_id, userId);
     expect(mockAsyncGetListById.asyncGetListById).toHaveBeenCalledTimes(mockTimes);
 
-    expect(mockAsyncGetItemById.asyncGetItemById).toHaveBeenCalledWith(item_id);
+    expect(mockAsyncGetItemById.asyncGetItemById).toHaveBeenCalledWith(item_id, list_id, userId);
     expect(mockAsyncGetItemById.asyncGetItemById).toHaveBeenCalledTimes(mockTimes);
     
     expect(itemsRepository.deleteItem).toHaveBeenCalledWith(item_id, list_id, userId);
@@ -181,9 +182,10 @@ describe('Testing itemsService.deleteItem', () => {
     // Assertion
     await expect(result(null, list_id, null)).rejects.toThrow('list associated with the item does not exists to be deleted!');
 
-    expect(mockAsyncGetListById.asyncGetListById).toHaveBeenCalledWith(list_id);
+    expect(mockAsyncGetListById.asyncGetListById).toHaveBeenCalledWith(list_id, null);
     expect(mockAsyncGetListById.asyncGetListById).toHaveBeenCalledTimes(mockTimes);
   });
+
   it('should throw an Error with an object alert message if getItemById return undefined', async () => {
 
     // Arrangement
@@ -206,9 +208,122 @@ describe('Testing itemsService.deleteItem', () => {
     // Assertion
     await expect(result(item_id, list_id, null)).rejects.toThrow('item does not exists to be deleted!');
 
-    expect(mockAsyncGetListById.asyncGetListById).toHaveBeenCalledWith(list_id);
+    expect(mockAsyncGetListById.asyncGetListById).toHaveBeenCalledWith(list_id, null);
     expect(mockAsyncGetListById.asyncGetListById).toHaveBeenCalledTimes(mockTimes);
-    expect(mockAsyncGetItemById.asyncGetItemById).toHaveBeenCalledWith(item_id);
+    expect(mockAsyncGetItemById.asyncGetItemById).toHaveBeenCalledWith(item_id, list_id, null);
     expect(mockAsyncGetItemById.asyncGetItemById).toHaveBeenCalledTimes(mockTimes);
+  });
+});
+
+describe('Testing itemsService.updateItem', () => {
+
+  it('should return an object containing the item updated from repository', async () => {
+
+    // Arrangement
+    const updateFields = {
+      title: "updated title",
+      status: "updated status"
+    }
+    const item_id = 1;
+    const list_id = 1;
+    const userId = 1;
+
+    mockAsyncGetListById.asyncGetListById.mockResolvedValue({
+      id: 1,
+      user_id: 1,
+      name: "name",
+      description: "description"
+    });
+    mockAsyncGetItemById.asyncGetItemById.mockResolvedValueOnce({
+      id: 1,
+      list_id: 1,
+      title: "title",
+      is_prioritized: "is_prioritized",
+      status: "status"
+    });
+    mockAsyncGetItemById.asyncGetItemById.mockResolvedValueOnce({
+      id: 1,
+      list_id: 1,
+      title: "title updated",
+      is_prioritized: "is_prioritized",
+      status: "status updated"
+    });
+    const {default: itemsRepository} = await import('#repositories/items.repositories.js');
+    itemsRepository.updateItem.mockResolvedValue({message: 'item updated successfully!'});
+
+    const {default: itemsService} = await import('#services/items.service.js');
+
+    // Act
+    const result = await itemsService.updateItem(updateFields, item_id, list_id, userId);
+
+    // Assertion
+    expect(mockAsyncGetListById.asyncGetListById).toHaveBeenCalledWith(list_id, userId);
+    expect(mockAsyncGetListById.asyncGetListById).toHaveBeenCalledTimes(1);
+
+    expect(mockAsyncGetItemById.asyncGetItemById).toHaveBeenNthCalledWith(1, item_id, list_id, userId);
+    expect(mockAsyncGetItemById.asyncGetItemById).toHaveBeenNthCalledWith(2, item_id, list_id, userId);
+    expect(mockAsyncGetItemById.asyncGetItemById).toHaveBeenCalledTimes(2);
+
+    expect(itemsRepository.updateItem).toHaveBeenCalledWith(updateFields, item_id, list_id, userId);
+    expect(itemsRepository.updateItem).toHaveBeenCalledTimes(1);
+
+    expect(result).toEqual({
+      message: 'item updated successfully!',
+      id: 1,
+      list_id: 1,
+      title: "title updated",
+      is_prioritized: "is_prioritized",
+      status: "status updated"
+    });
+  });
+
+  it('should throw an Error with an object alert message if asyncGetListById return undefined', async () => {
+
+    // Arrangement
+    const list_id = 1;
+    const userId = 1;
+
+    mockAsyncGetListById.asyncGetListById.mockResolvedValue(undefined);
+
+    const {default: itemsService} = await import('#services/items.service.js');
+
+    // Act
+    const result = itemsService.updateItem;
+
+    // Assertion
+    await expect(result(null, null, list_id, userId)).rejects.toThrow('list associated with the item does not exists to be updated!');
+    
+    expect(mockAsyncGetListById.asyncGetListById).toHaveBeenCalledWith(list_id, userId);
+    expect(mockAsyncGetListById.asyncGetListById).toHaveBeenCalledTimes(1);
+  });
+
+  it('should throw an Error with an object alert message if asyncGetItemById return undefined', async () => {
+
+    // Arrangement
+    const item_id = 1;
+    const list_id = 1;
+    const userId = 1;
+
+    mockAsyncGetListById.asyncGetListById.mockResolvedValue({
+      id: 1,
+      user_id: 1,
+      name: "name",
+      description: "description" 
+    });
+    mockAsyncGetItemById.asyncGetItemById.mockResolvedValue(undefined);
+
+    const {default: itemsService} = await import('#services/items.service.js');
+
+    // Act
+    const result = itemsService.updateItem;
+
+    // Assertion
+    await expect(result(null, item_id, list_id, userId)).rejects.toThrow('item does not exists to be updated!');
+    
+    expect(mockAsyncGetListById.asyncGetListById).toHaveBeenCalledWith(list_id, userId);
+    expect(mockAsyncGetListById.asyncGetListById).toHaveBeenCalledTimes(1);
+
+    expect(mockAsyncGetItemById.asyncGetItemById).toHaveBeenCalledWith(item_id, list_id, userId);
+    expect(mockAsyncGetItemById.asyncGetItemById).toHaveBeenCalledTimes(1);
   });
 });

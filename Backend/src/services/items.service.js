@@ -16,18 +16,32 @@ const createItem = async (newItem) => {
 }
 
 const deleteItem = async (item_id, list_id, userId) => {
-  const list = await listQuery.asyncGetListById(list_id);
+  const list = await listQuery.asyncGetListById(list_id, userId);
   if(!list) throw new Error('list associated with the item does not exists to be deleted!');
 
-  const item = await itemQuery.asyncGetItemById(item_id);
+  const item = await itemQuery.asyncGetItemById(item_id, list_id, userId);
   if(!item) throw new Error('item does not exists to be deleted!');
 
   const message = await itemsRepository.deleteItem(item_id, list_id, userId);
   return {...message, ...item};
 }
 
+const updateItem = async (updateFields, item_id, list_id, userId) => {
+  const list = await listQuery.asyncGetListById(list_id, userId);
+  if(!list) throw new Error('list associated with the item does not exists to be updated!');
+
+  const item = await itemQuery.asyncGetItemById(item_id, list_id, userId);
+  if(!item) throw new Error('item does not exists to be updated!');
+  
+  const message = await itemsRepository.updateItem(updateFields, item_id, list_id, userId);
+
+  const updatedItem = await itemQuery.asyncGetItemById(item_id, list_id, userId);
+  return {...message, ...updatedItem};
+}
+
 export default {
   getItemsByUserId,
   createItem,
-  deleteItem
+  deleteItem,
+  updateItem
 }

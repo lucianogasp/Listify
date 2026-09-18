@@ -103,7 +103,8 @@ const updateList = (updateFields, list_id, userId) => {
     SET ${queryFields.join(', ')}
     WHERE id = ?
       AND user_id = ?  
-  `
+  `;
+  
   return new Promise((res, rej) => {
     db.run(
       query

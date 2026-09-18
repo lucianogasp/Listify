@@ -1,4 +1,5 @@
 import db from "#config/database.js";
+import { ItemQuery } from "#services/ItemQuery.js";
 
 db.run(
   `
@@ -34,14 +35,20 @@ const getItemsByUserId = (userId) => {
   });
 }
 
-const getItemById = (item_id) => {
+const getItemById = (item_id, list_id, userId) => {
   return new Promise((res, rej) => {
     db.get(
       `
         SELECT * FROM items
         WHERE id = ?
+          AND list_id = ?
+          AND EXISTS(
+            SELECT 1 FROM lists
+            WHERE lists.id = items.list_id
+              AND lists.user_id = ?
+          )
       `
-      ,[item_id]
+      ,[item_id, list_id, userId]
       ,(err, row) => {
         if(err) {
           rej(err);
@@ -98,9 +105,44 @@ const deleteItem = (item_id, list_id, userId) => {
   });
 }
 
+const updateItem = (updateFields, item_id, list_id, userId) => {
+  const queryFields = [];
+  const values = [];
+  Object.keys(updateFields).forEach(field => {
+    queryFields.push(`${field} = ?`);
+    values.push(updateFields[field]);
+  });
+  const query = `
+    UPDATE items
+    SET ${queryFields.join(', ')}
+    WHERE id = ?
+      AND list_id = ?
+      AND EXISTS(
+        SELECT 1 FROM lists
+        WHERE lists.id = items.list_id
+          AND lists.user_id = ?
+      )
+  `;
+  
+  return new Promise((res, rej) => {
+    db.run(
+      query
+      ,[...values, item_id, list_id, userId]
+      ,(err) => {
+        if(err) {
+          rej(err);
+        } else {
+          res({message: 'item updated successfully!'});
+        }
+      }
+    );
+  });
+}
+
 export default {
   getItemsByUserId,
   getItemById,
   createItem,
-  deleteItem
+  deleteItem,
+  updateItem
 }
