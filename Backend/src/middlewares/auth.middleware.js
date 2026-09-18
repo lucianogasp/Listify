@@ -1,4 +1,4 @@
-import { AuthToken } from "#services/auth.service.js";
+import { AuthToken } from "#services/AuthToken.js";
 
 const authToken = new AuthToken();
 

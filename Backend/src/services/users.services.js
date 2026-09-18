@@ -4,7 +4,7 @@ import userRepository from "#repositories/users.repositories.js";
 // import classes
 import { UserQuery } from './UserQuery.js';
 import { UserEncryption } from "./UserEncryption.js";
-import { AuthToken } from "./auth.service.js";
+import { AuthToken } from "./AuthToken.js";
 
 const userQuery = new UserQuery();
 const userEncryption = new UserEncryption();

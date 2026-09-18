@@ -7,6 +7,9 @@ const mockUserEncryption = {
   asyncGenerateHash: jest.fn(),
   asyncCompareHash: jest.fn()
 }
+const mockAuthToken = {
+  generateJWT: jest.fn()
+}
 jest.unstable_mockModule(
   '#repositories/users.repositories.js',
   () => ({
@@ -31,6 +34,14 @@ jest.unstable_mockModule(
     })
   })
 );
+jest.unstable_mockModule(
+  '#services/AuthToken.js',
+  () => ({
+    AuthToken: jest.fn().mockImplementation(() => {
+      return mockAuthToken;
+    })
+  })
+);
 
 describe('Testing userService.userRegister', () => {
 
@@ -48,6 +59,8 @@ describe('Testing userService.userRegister', () => {
       email: "lucianogasp999@gmail",
       hash: "_hash_"
     });
+    mockAuthToken.generateJWT.mockReturnValue('_token_');
+
     const {default: userService} = await import('#services/users.services.js');
 
     // Act
@@ -60,10 +73,11 @@ describe('Testing userService.userRegister', () => {
     expect(mockUserEncryption.asyncGenerateHash).toHaveBeenCalledWith(newUser.password);
     expect(mockUserEncryption.asyncGenerateHash).toHaveBeenCalledTimes(mockTimes);
 
+    expect(mockAuthToken.generateJWT).toHaveBeenCalledWith(1);
+    expect(mockAuthToken.generateJWT).toHaveBeenCalledTimes(mockTimes);
+
     expect(result).toEqual({
-      id: 1,
-      email: "lucianogasp999@gmail",
-      hash: "_hash_"
+      token: '_token_'
     });
   });
 
@@ -102,6 +116,7 @@ describe('Testing userService.userLogin', () => {
       email: "lucianogasp1@gmail",
       password: "_hash_"
     });
+    mockAuthToken.generateJWT.mockReturnValue('_token_');
     mockUserEncryption.asyncCompareHash.mockResolvedValue(true);
     const {default: userService} = await import('#services/users.services.js');
 
@@ -115,11 +130,11 @@ describe('Testing userService.userLogin', () => {
     expect(mockUserEncryption.asyncCompareHash).toHaveBeenCalledWith(newUser.password, '_hash_');
     expect(mockUserEncryption.asyncCompareHash).toHaveBeenCalledTimes(mockTimes);
 
+    expect(mockAuthToken.generateJWT).toHaveBeenCalledWith(1);
+    expect(mockAuthToken.generateJWT).toHaveBeenCalledTimes(mockTimes);
+
     expect(result).toEqual({
-      message: "Login successful",
-      id: 1,
-      email: "lucianogasp1@gmail",
-      password: "_hash_"
+      token: '_token_'
     });
   });
 

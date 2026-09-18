@@ -91,6 +91,8 @@ describe('Testing itemsService.createItem', () => {
   it('should return an object containing a success message and id of a created item', async () => {
 
     // Arrangement
+    const list_id = 1;
+    const userId = 1;
     const newItem = {
       title: "myTitle item",
       is_prioritized: "prioridade",
@@ -105,10 +107,10 @@ describe('Testing itemsService.createItem', () => {
     const {default: itemsService} = await import('#services/items.service.js');
 
     // Act
-    const result = await itemsService.createItem(newItem);
+    const result = await itemsService.createItem(list_id, userId, newItem);
 
     // Assertion
-    expect(itemsRepository.createItem).toHaveBeenCalledWith(newItem);
+    expect(itemsRepository.createItem).toHaveBeenCalledWith(list_id, userId, newItem);
     expect(itemsRepository.createItem).toHaveBeenCalledTimes(mockTimes);
 
     expect(result).toEqual(
