@@ -11,7 +11,7 @@ const getListsByUserId = async (req, res) => {
 }
 
 const createList = async (req, res) => {
-  const userId = req.userId || 1; // implementar userId em payload durante jwt midd auth
+  const userId = req.userId || 2 // implementar userId em payload durante jwt midd auth
   const newList = req.body;
   try {
     const list_id = await listsService.createList({userId, ...newList});

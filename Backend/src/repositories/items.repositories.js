@@ -60,15 +60,20 @@ const getItemById = (item_id, list_id, userId) => {
   });
 }
 
-const createItem = (list_id, newItem) => {
+const createItem = (list_id, userId, newItem) => {
   const {title, is_prioritized, status} = newItem;
   return new Promise((res, rej) => {
     db.run(
       `
         INSERT INTO items (list_id, title, is_prioritized, status)
-        VALUES (?, ?, ?, ?)
+        SELECT ?, ?, ?, ?
+        WHERE EXISTS (
+          SELECT 1 FROM lists
+          WHERE lists.id = ?
+            AND lists.user_id = ?
+        )
       `
-      ,[list_id, title, is_prioritized, status]
+      ,[list_id, title, is_prioritized, status, list_id, userId]
       ,function(err) {
         if(err) {
           rej(err);
