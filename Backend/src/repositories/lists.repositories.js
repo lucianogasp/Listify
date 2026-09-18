@@ -31,14 +31,15 @@ const getListsByUserId = (userId) => {
   });
 }
 
-const getListById = (list_id) => {
+const getListById = (list_id, userId) => {
   return new Promise((res, rej) => {
     db.get(
       `
         SELECT * FROM lists
         WHERE id = ?
+          AND user_id = ?
       `
-      ,[list_id]
+      ,[list_id, userId]
       ,(err, row) => {
         if(err) {
           rej(err);
@@ -90,9 +91,38 @@ const deleteList = (list_id, userId) => {
   });
 }
 
+const updateList = (updateFields, list_id, userId) => {
+  const queryFields = [];
+  const values = [];
+  Object.keys(updateFields).forEach(field => {
+    queryFields.push(`${field} = ?`);
+    values.push(updateFields[field]);
+  });
+  const query = `
+    UPDATE lists
+    SET ${queryFields.join(', ')}
+    WHERE id = ?
+      AND user_id = ?  
+  `
+  return new Promise((res, rej) => {
+    db.run(
+      query
+      ,[...values, list_id, userId]
+      ,(err) => {
+        if(err) {
+          rej(err);
+        } else {
+          res({ message: 'list updated successfully!' });
+        }
+      }
+    );
+  });
+}
+
 export default {
   getListsByUserId,
   getListById,
   createList,
-  deleteList
+  deleteList,
+  updateList
 }

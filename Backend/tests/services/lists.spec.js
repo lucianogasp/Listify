@@ -128,7 +128,7 @@ describe("Testing listsService.deleteList", () => {
 
     // Assertion
     expect(mockAsyncGetListById.asyncGetListById).toHaveBeenCalled();
-    expect(mockAsyncGetListById.asyncGetListById).toHaveBeenCalledWith(list_id);
+    expect(mockAsyncGetListById.asyncGetListById).toHaveBeenCalledWith(list_id, userId);
     expect(mockAsyncGetListById.asyncGetListById).toHaveBeenCalledTimes(mockTimes);
     expect(listsRepository.deleteList).toHaveBeenCalled();
     expect(listsRepository.deleteList).toHaveBeenCalledWith(list_id, userId);
@@ -147,6 +147,7 @@ describe("Testing listsService.deleteList", () => {
 
     // Arrangement
     const list_id = 999;
+    const userId = 999;
     const mockTimes = 1;
 
     mockAsyncGetListById.asyncGetListById.mockResolvedValue(undefined);
@@ -156,10 +157,10 @@ describe("Testing listsService.deleteList", () => {
     const result = listsService.deleteList;
 
     // Assertion
-    await expect(result(list_id, null)).rejects.toThrow('list does not exists to be deleted!');
+    await expect(result(list_id, userId)).rejects.toThrow('list does not exists to be deleted!');
 
     expect(mockAsyncGetListById.asyncGetListById).toHaveBeenCalled();
-    expect(mockAsyncGetListById.asyncGetListById).toHaveBeenCalledWith(list_id);
+    expect(mockAsyncGetListById.asyncGetListById).toHaveBeenCalledWith(list_id, userId);
     expect(mockAsyncGetListById.asyncGetListById).toHaveBeenCalledTimes(mockTimes);
   });
 });

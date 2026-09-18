@@ -32,8 +32,21 @@ const deleteList = async (req, res) => {
   }
 }
 
+const updateList = async (req, res) => {
+  const userId = req.userId || 1;
+  const {list_id} = req.params;
+  const updateFields = req.body;
+  try {
+    const updatedList = await listsService.updateList(updateFields, list_id, userId);
+    return res.status(200).json(updatedList);
+  } catch(err) {
+    return res.status(500).json({message: err.message});
+  }
+}
+
 export default {
   getListsByUserId,
   createList,
-  deleteList
+  deleteList,
+  updateList
 }

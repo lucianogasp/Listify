@@ -12,4 +12,7 @@ router.post('/lists', listsController.createList);
 // DELETE FROM lists WHERE id associated to an user_id
 router.delete('/lists/:list_id', listsController.deleteList);
 
+// UPDATE lists ... WHERE id associated to an user_id
+router.patch('/lists/:list_id', listsController.updateList);
+
 export default router;
