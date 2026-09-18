@@ -11,7 +11,8 @@ jest.unstable_mockModule(
       default: {
         getListsByUserId: jest.fn(),
         createList: jest.fn(),
-        deleteList: jest.fn()
+        deleteList: jest.fn(),
+        updateList: jest.fn()
       }
     }
   }
@@ -44,7 +45,6 @@ describe('Testing listsService.getListByUserId', () => {
     const result = await listsService.getListsByUserId(userId);
 
     // Assertion
-    expect(listsRepository.getListsByUserId).toHaveBeenCalled();
     expect(listsRepository.getListsByUserId).toHaveBeenCalledWith(userId);
     expect(listsRepository.getListsByUserId).toHaveBeenCalledTimes(mockTimes);
 
@@ -68,7 +68,6 @@ describe('Testing listsService.getListByUserId', () => {
     const result = await listsService.getListsByUserId(userId);
 
     // Assertion
-    expect(listsRepository.getListsByUserId).toHaveBeenCalled();
     expect(listsRepository.getListsByUserId).toHaveBeenCalledWith(userId);
     expect(listsRepository.getListsByUserId).toHaveBeenCalledTimes(mockTimes);
 
@@ -94,7 +93,6 @@ describe('Testing listsService.createList', () => {
     const result = await listsService.createList(newList);
 
     // Assertion
-    expect(listsRepository.createList).toHaveBeenCalled();
     expect(listsRepository.createList).toHaveBeenCalledWith(newList);
     expect(listsRepository.createList).toHaveBeenCalledTimes(mockTimes);
 
@@ -127,10 +125,8 @@ describe("Testing listsService.deleteList", () => {
     const result = await listsService.deleteList(list_id, userId);
 
     // Assertion
-    expect(mockAsyncGetListById.asyncGetListById).toHaveBeenCalled();
     expect(mockAsyncGetListById.asyncGetListById).toHaveBeenCalledWith(list_id, userId);
     expect(mockAsyncGetListById.asyncGetListById).toHaveBeenCalledTimes(mockTimes);
-    expect(listsRepository.deleteList).toHaveBeenCalled();
     expect(listsRepository.deleteList).toHaveBeenCalledWith(list_id, userId);
     expect(listsRepository.deleteList).toHaveBeenCalledTimes(mockTimes);
 
@@ -159,7 +155,83 @@ describe("Testing listsService.deleteList", () => {
     // Assertion
     await expect(result(list_id, userId)).rejects.toThrow('list does not exists to be deleted!');
 
-    expect(mockAsyncGetListById.asyncGetListById).toHaveBeenCalled();
+    expect(mockAsyncGetListById.asyncGetListById).toHaveBeenCalledWith(list_id, userId);
+    expect(mockAsyncGetListById.asyncGetListById).toHaveBeenCalledTimes(mockTimes);
+  });
+});
+
+describe("Testing, listsService.updateList", () => {
+
+  it('should return an object containing the updated list from repository', async () => {
+
+    // Arrangement
+    const updateFields = {
+      name: 'updated name',
+      description: 'updated description'
+    }
+    const list_id = 1;
+    const userId = 1;
+    const mockAsyncGetListByIdTimes = 2;
+    const mockRepositoryUpdateListTimes = 1;
+
+    const oldList = {
+      id: 1,
+      user_id: 1,
+      name: 'name',
+      description: 'description'
+    }
+    const updatedList = {
+      id: 1,
+      user_id: 1,
+      name: 'updated name',
+      description: 'updated description'
+    }
+    mockAsyncGetListById.asyncGetListById
+      .mockResolvedValueOnce(oldList)
+      .mockResolvedValueOnce(updatedList);
+    const {default: listsRepository} = await import('#repositories/lists.repositories.js');
+    listsRepository.updateList.mockResolvedValue({
+      message: 'list updated successfully!'
+    });
+
+    const {default: listsService} = await import('#services/lists.services.js');
+
+    // Act
+    const result = await listsService.updateList(updateFields, list_id, userId);
+
+    // Assertion
+    expect(mockAsyncGetListById.asyncGetListById).toHaveBeenNthCalledWith(1, list_id, userId);
+    expect(mockAsyncGetListById.asyncGetListById).toHaveBeenNthCalledWith(2, list_id, userId);
+    expect(mockAsyncGetListById.asyncGetListById).toHaveBeenCalledTimes(mockAsyncGetListByIdTimes);
+
+    expect(listsRepository.updateList).toHaveBeenCalledWith(updateFields, list_id, userId);
+    expect(listsRepository.updateList).toHaveBeenCalledTimes(mockRepositoryUpdateListTimes);
+
+    expect(result).toEqual({
+      message: 'list updated successfully!',
+      id: 1,
+      user_id: 1,
+      name: 'updated name',
+      description: 'updated description'
+    });
+  });
+
+  it('should throw an Error with an object alert message if asyncGetlistById return undefined', async () => {
+
+    // Arrangement
+    const list_id = 1;
+    const userId = 1;
+    const mockTimes = 1;
+
+    mockAsyncGetListById.asyncGetListById.mockResolvedValue(undefined);
+    const {default:listsService} = await import('#services/lists.services.js');
+
+    // Act
+    const result = listsService.updateList;
+
+    // Assertion
+    await expect(result(null, list_id, userId)).rejects.toThrow('list does not exists do be updated!');
+
     expect(mockAsyncGetListById.asyncGetListById).toHaveBeenCalledWith(list_id, userId);
     expect(mockAsyncGetListById.asyncGetListById).toHaveBeenCalledTimes(mockTimes);
   });

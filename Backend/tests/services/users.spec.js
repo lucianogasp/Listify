@@ -54,10 +54,9 @@ describe('Testing userService.userRegister', () => {
     const result = await userService.userRegister(newUser);
 
     // Assertion
-    expect(mockUserQuery.asyncFindByEmail).toHaveBeenCalled();
     expect(mockUserQuery.asyncFindByEmail).toHaveBeenCalledWith(newUser.email);
     expect(mockUserQuery.asyncFindByEmail).toHaveBeenCalledTimes(mockTimes);
-    expect(mockUserEncryption.asyncGenerateHash).toHaveBeenCalled();
+    
     expect(mockUserEncryption.asyncGenerateHash).toHaveBeenCalledWith(newUser.password);
     expect(mockUserEncryption.asyncGenerateHash).toHaveBeenCalledTimes(mockTimes);
 
@@ -85,7 +84,6 @@ describe('Testing userService.userRegister', () => {
     // Assertion
     await expect(result(newUser)).rejects.toThrow("User with this email already exists!");
 
-    expect(mockUserQuery.asyncFindByEmail).toHaveBeenCalled();
     expect(mockUserQuery.asyncFindByEmail).toHaveBeenCalledWith(newUser.email);
     expect(mockUserQuery.asyncFindByEmail).toHaveBeenCalledTimes(mockTimes);
   });
@@ -111,10 +109,9 @@ describe('Testing userService.userLogin', () => {
     const result = await userService.userLogin(newUser);
 
     // Assertion
-    expect(mockUserQuery.asyncFindByEmail).toHaveBeenCalled();
     expect(mockUserQuery.asyncFindByEmail).toHaveBeenCalledWith(newUser.email);
     expect(mockUserQuery.asyncFindByEmail).toHaveBeenCalledTimes(mockTimes);
-    expect(mockUserEncryption.asyncCompareHash).toHaveBeenCalled();
+
     expect(mockUserEncryption.asyncCompareHash).toHaveBeenCalledWith(newUser.password, '_hash_');
     expect(mockUserEncryption.asyncCompareHash).toHaveBeenCalledTimes(mockTimes);
 
@@ -141,7 +138,6 @@ describe('Testing userService.userLogin', () => {
     // Assertion
     await expect(result(newUser)).rejects.toThrow('Invalid Email or Password!');
 
-    expect(mockUserQuery.asyncFindByEmail).toHaveBeenCalled();
     expect(mockUserQuery.asyncFindByEmail).toHaveBeenCalledWith(newUser.email);
     expect(mockUserQuery.asyncFindByEmail).toHaveBeenCalledTimes(mockTimes);
   });
@@ -166,10 +162,9 @@ describe('Testing userService.userLogin', () => {
     // Assertion
     await expect(result(newUser)).rejects.toThrow('Invalid Email or Password!');
 
-    expect(mockUserQuery.asyncFindByEmail).toHaveBeenCalled();
     expect(mockUserQuery.asyncFindByEmail).toHaveBeenCalledWith(newUser.email);
     expect(mockUserQuery.asyncFindByEmail).toHaveBeenCalledTimes(mockTimes);
-    expect(mockUserEncryption.asyncCompareHash).toHaveBeenCalled();
+
     expect(mockUserEncryption.asyncCompareHash).toHaveBeenCalledWith(newUser.password, "_hash_");
     expect(mockUserEncryption.asyncCompareHash).toHaveBeenCalledTimes(mockTimes);
   });

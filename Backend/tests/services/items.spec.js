@@ -55,7 +55,6 @@ describe('Testing itemsService.getItemsByUserId', () => {
     const result = await itemsService.getItemsByUserId(userId);
 
     // Assertion
-    expect(itemsRepository.getItemsByUserId).toHaveBeenCalled();
     expect(itemsRepository.getItemsByUserId).toHaveBeenCalledWith(userId);
     expect(itemsRepository.getItemsByUserId).toHaveBeenCalledTimes(mockTimes);
 
@@ -79,7 +78,6 @@ describe('Testing itemsService.getItemsByUserId', () => {
     const result = await itemsService.getItemsByUserId(userId);
 
     // Assertion
-    expect(itemsRepository.getItemsByUserId).toHaveBeenCalled();
     expect(itemsRepository.getItemsByUserId).toHaveBeenCalledWith(userId);
     expect(itemsRepository.getItemsByUserId).toHaveBeenCalledTimes(mockTimes);
 
@@ -109,7 +107,6 @@ describe('Testing itemsService.createItem', () => {
     const result = await itemsService.createItem(newItem);
 
     // Assertion
-    expect(itemsRepository.createItem).toHaveBeenCalled();
     expect(itemsRepository.createItem).toHaveBeenCalledWith(newItem);
     expect(itemsRepository.createItem).toHaveBeenCalledTimes(mockTimes);
 
@@ -150,15 +147,12 @@ describe('Testing itemsService.deleteItem', () => {
     const result = await itemsServices.deleteItem(item_id, list_id, userId);
 
     // Assertion
-    expect(mockAsyncGetListById.asyncGetListById).toHaveBeenCalled();
     expect(mockAsyncGetListById.asyncGetListById).toHaveBeenCalledWith(list_id);
     expect(mockAsyncGetListById.asyncGetListById).toHaveBeenCalledTimes(mockTimes);
 
-    expect(mockAsyncGetItemById.asyncGetItemById).toHaveBeenCalled();
     expect(mockAsyncGetItemById.asyncGetItemById).toHaveBeenCalledWith(item_id);
     expect(mockAsyncGetItemById.asyncGetItemById).toHaveBeenCalledTimes(mockTimes);
     
-    expect(itemsRepository.deleteItem).toHaveBeenCalled();
     expect(itemsRepository.deleteItem).toHaveBeenCalledWith(item_id, list_id, userId);
     expect(itemsRepository.deleteItem).toHaveBeenCalledTimes(mockTimes);
 
@@ -187,7 +181,6 @@ describe('Testing itemsService.deleteItem', () => {
     // Assertion
     await expect(result(null, list_id, null)).rejects.toThrow('list associated with the item does not exists to be deleted!');
 
-    expect(mockAsyncGetListById.asyncGetListById).toHaveBeenCalled();
     expect(mockAsyncGetListById.asyncGetListById).toHaveBeenCalledWith(list_id);
     expect(mockAsyncGetListById.asyncGetListById).toHaveBeenCalledTimes(mockTimes);
   });
@@ -213,10 +206,8 @@ describe('Testing itemsService.deleteItem', () => {
     // Assertion
     await expect(result(item_id, list_id, null)).rejects.toThrow('item does not exists to be deleted!');
 
-    expect(mockAsyncGetListById.asyncGetListById).toHaveBeenCalled();
     expect(mockAsyncGetListById.asyncGetListById).toHaveBeenCalledWith(list_id);
     expect(mockAsyncGetListById.asyncGetListById).toHaveBeenCalledTimes(mockTimes);
-    expect(mockAsyncGetItemById.asyncGetItemById).toHaveBeenCalled();
     expect(mockAsyncGetItemById.asyncGetItemById).toHaveBeenCalledWith(item_id);
     expect(mockAsyncGetItemById.asyncGetItemById).toHaveBeenCalledTimes(mockTimes);
   });
