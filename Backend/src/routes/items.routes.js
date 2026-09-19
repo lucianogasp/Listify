@@ -4,6 +4,8 @@ import itemsController from "#controllers/items.controllers.js";
 
 const router = Router();
 
+router.use(authMiddleware);
+
 // SELECT items.* FROM items JOIN lists ON ... associated to an user_id
 router.get('/lists/items', itemsController.getItemsByUserId);
 

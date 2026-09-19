@@ -11,6 +11,9 @@ const getItemsByUserId = async (userId) => {
 }
 
 const createItem = async (list_id, userId, newItem) => {
+  const list = await listQuery.asyncGetListById(list_id, userId);
+  if(!list) throw new Error('list associated with the item does not exists to be created!');
+
   const item_id = await itemsRepository.createItem(list_id, userId, newItem);
   return item_id;
 }

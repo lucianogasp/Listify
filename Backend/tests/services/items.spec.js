@@ -100,6 +100,12 @@ describe('Testing itemsService.createItem', () => {
     }
     const mockTimes = 1;
 
+    mockAsyncGetListById.asyncGetListById.mockResolvedValue({
+      id: 1, 
+      user_id: 1, 
+      name: "compras", 
+      description: "lista de compras" 
+    });
     const {default: itemsRepository} = await import('#repositories/items.repositories.js');
     itemsRepository.createItem.mockResolvedValue(
       { message: "item created successfully", id: 1 }
