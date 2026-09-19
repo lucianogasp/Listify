@@ -1,5 +1,7 @@
 import db from "#config/database.js";
-import { ItemQuery } from "#services/ItemQuery.js";
+import { ItemBooleanConverter } from "./ItemBooleanConverter.js";
+
+const itemBooleanConverter = new ItemBooleanConverter();
 
 db.run(
   `
@@ -7,7 +9,7 @@ db.run(
       id INTEGER PRIMARY KEY AUTOINCREMENT,
       list_id INTEGER,
       title TEXT NOT NULL,
-      is_prioritized TEXT NOT NULL,
+      is_prioritized BOOLEAN NOT NULL,
       status TEXT NOT NULL,
       FOREIGN KEY (list_Id) REFERENCES lists(id)
     )
@@ -28,7 +30,8 @@ const getItemsByUserId = (userId) => {
         if(err) {
           rej(err);
         } else {
-          res(rows);
+          const convertedRows = itemBooleanConverter.ArraySqliteBooleanToBoolean(rows);
+          res(convertedRows);
         }
       }
     );
@@ -53,7 +56,8 @@ const getItemById = (item_id, list_id, userId) => {
         if(err) {
           rej(err);
         } else {
-          res(row);
+          const convertedRows = itemBooleanConverter.sqliteBooleanToBoolean(row);
+          res(convertedRows);
         }
       }
     );
