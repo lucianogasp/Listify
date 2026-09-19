@@ -1,5 +1,6 @@
 import jwt from 'jsonwebtoken';
 import 'dotenv/config';
+import { AppError } from '#errors/app.error.js';
 
 export class AuthToken {
 
@@ -20,16 +21,19 @@ export class AuthToken {
     );
   }
 
-  verifyJWT = (token) => {
-    const secret = this.secret;
-    return jwt.verify(
-      token, // token
-      secret, // Secret
-    );
-  }
-
   getTokenFromHeader = (header) => {
     const token = header?.split(' ')[1];
     return token;
+  }
+
+  verifyJWT = (token) => {
+    try {
+      return jwt.verify(
+        token, // token
+        this.secret, // Secret
+      );
+    } catch {
+      throw null;
+    }
   }
 }

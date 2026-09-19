@@ -1,46 +1,46 @@
 import itemsService from "#services/items.service.js";
 
-const getItemsByUserId = async (req, res) => {
-  const userId = req.userId || 1; // implementar userId em payload durante jwt midd auth
+const getItemsByUserId = async (req, res, next) => {
+  const userId = req.userId || null;
   try {
     const userItems = await itemsService.getItemsByUserId(userId);
     return res.status(200).json({items: userItems});
   } catch(err) {
-    return res.status(500).json({message: err.message});
+    next(err);
   }
 }
 
-const createItem = async (req, res) => {
-  const userId = req.userId || 1; // implementar userId em payload durante jwt midd auth
+const createItem = async (req, res, next) => {
+  const userId = req.userId || null;
   const {list_id} = req.params;
   const newItem = req.body;
   try {
-    const item_id = await itemsService.createItem(list_id, userId, newItem);
-    return res.status(201).json({item_id});
+    const createdItem = await itemsService.createItem(list_id, userId, newItem);
+    return res.status(201).json(createdItem);
   } catch(err) {
-    return res.status(500).json({message: err.message});
+    next(err);
   }
 }
 
-const deleteItem = async (req, res) => {
-  const userId = req.userId || 1; // implementar userId em payload durante jwt midd auth
+const deleteItem = async (req, res, next) => {
+  const userId = req.userId || null;
   const {item_id, list_id} = req.params;
   try {
     const deletedItem = await itemsService.deleteItem(item_id, list_id, userId);
     return res.status(200).json(deletedItem);
   } catch(err) {
-    return res.status(500).json({message: err.message});
+    next(err);
   }
 }
-const updateItem = async (req, res) => {
-  const userId = req.userId || 1; // implementar userId em payload durante jwt midd auth
+const updateItem = async (req, res, next) => {
+  const userId = req.userId || null;
   const {list_id, item_id} = req.params;
   const updateFields = req.body;
   try {
     const updatedItem = await itemsService.updateItem(updateFields, item_id, list_id, userId);
     return res.status(200).json(updatedItem);
   } catch(err) {
-    return res.status(500).json({message: err.message});
+    next(err);
   }
 }
 

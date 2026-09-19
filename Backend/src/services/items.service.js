@@ -1,4 +1,5 @@
 import itemsRepository from "#repositories/items.repositories.js";
+import { AppError } from "#errors/app.error.js";
 import { ItemQuery } from "./ItemQuery.js";
 import { ListQuery } from "./ListQuery.js";
 
@@ -12,18 +13,18 @@ const getItemsByUserId = async (userId) => {
 
 const createItem = async (list_id, userId, newItem) => {
   const list = await listQuery.asyncGetListById(list_id, userId);
-  if(!list) throw new Error('list associated with the item does not exists to be created!');
+  if(!list) throw new AppError(404, 'list associated with the item does not exists to be created!');
 
-  const item_id = await itemsRepository.createItem(list_id, userId, newItem);
-  return item_id;
+  const createdItem = await itemsRepository.createItem(list_id, userId, newItem);
+  return createdItem;
 }
 
 const deleteItem = async (item_id, list_id, userId) => {
   const list = await listQuery.asyncGetListById(list_id, userId);
-  if(!list) throw new Error('list associated with the item does not exists to be deleted!');
+  if(!list) throw new AppError(404, 'list associated with the item does not exists to be deleted!');
 
   const item = await itemQuery.asyncGetItemById(item_id, list_id, userId);
-  if(!item) throw new Error('item does not exists to be deleted!');
+  if(!item) throw new AppError(404, 'item does not exists to be deleted!');
 
   const message = await itemsRepository.deleteItem(item_id, list_id, userId);
   return {...message, ...item};
@@ -31,10 +32,10 @@ const deleteItem = async (item_id, list_id, userId) => {
 
 const updateItem = async (updateFields, item_id, list_id, userId) => {
   const list = await listQuery.asyncGetListById(list_id, userId);
-  if(!list) throw new Error('list associated with the item does not exists to be updated!');
+  if(!list) throw new AppError(404, 'list associated with the item does not exists to be updated!');
 
   const item = await itemQuery.asyncGetItemById(item_id, list_id, userId);
-  if(!item) throw new Error('item does not exists to be updated!');
+  if(!item) throw new AppError(404, 'item does not exists to be updated!');
   
   const message = await itemsRepository.updateItem(updateFields, item_id, list_id, userId);
 

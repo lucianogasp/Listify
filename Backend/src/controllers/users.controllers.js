@@ -1,22 +1,22 @@
 import userService from "#services/users.services.js";
 
-const userRegister = async (req, res) => {
+const userRegister = async (req, res, next) => {
   const newUser = req.body;
   try {
     const token = await userService.userRegister(newUser);
     return res.status(201).json(token);
   } catch(err) {
-    return res.status(500).json({message: err.message});
+    next(err);
   }
 }
 
-const userLogin = async (req, res) => {
+const userLogin = async (req, res, next) => {
   const newUser = req.body;
   try {
     const token = await userService.userLogin(newUser);
-    return res.status(201).json(token);
+    return res.status(200).json(token);
   } catch(err) {
-    return res.status(500).json({message: err.message});
+    next(err);
   }
 }
 
