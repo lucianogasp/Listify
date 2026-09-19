@@ -8,23 +8,28 @@ export class AuthToken {
     algorithm: 'HS256'
   }) {
     this.objectConfig = objectConfig;
+    this.secret = process.env.SECRET_JWT;
   }
 
   generateJWT = (userId) => {
+    const secret = this.secret;
     return jwt.sign(
       {userId}, // payload
-      process.env.SECRET_JWT, // Secret
+      secret, // Secret
       {expiresIn: this.objectConfig.expiresInTime} // config Token
     );
   }
 
   verifyJWT = (token) => {
+    const secret = this.secret;
     return jwt.verify(
       token, // token
-      process.env.SECRET_JWT, // Secret
-      { 
-        algorithms: [this.objectConfig.algorithm] // ObjectConfig
-      }
+      secret, // Secret
     );
+  }
+
+  getTokenFromHeader = (header) => {
+    const token = header?.split(' ')[1];
+    return token;
   }
 }

@@ -4,8 +4,10 @@ import listsController from '#controllers/lists.controllers.js';
 
 const router = Router();
 
+router.use(authMiddleware);
+
 // SELECT * FROM lists associated to an user_id
-router.get('/lists', authMiddleware, listsController.getListsByUserId);
+router.get('/lists', listsController.getListsByUserId);
 
 // INSERT INTO lists new records
 router.post('/lists', listsController.createList);
