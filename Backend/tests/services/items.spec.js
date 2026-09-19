@@ -123,6 +123,26 @@ describe('Testing itemsService.createItem', () => {
       { message: "item created successfully", id: 1 }
     );
   });
+
+  it('should throw an Error with an object alert message if getListById return undefined', async () => {
+
+    // Arrangement
+    const list_id = 1;
+    const userId = 1;
+    const mockTimes = 1;
+
+    mockAsyncGetListById.asyncGetListById.mockResolvedValue(undefined);
+    const {default: itemsService} = await import('#services/items.service.js');
+
+    // Act
+    const result = itemsService.createItem;
+
+    // Assertion
+    await expect(result(list_id, userId, null)).rejects.toThrow('list associated with the item does not exists to be created!');
+
+    expect(mockAsyncGetListById.asyncGetListById).toHaveBeenCalledWith(list_id, userId);
+    expect(mockAsyncGetListById.asyncGetListById).toHaveBeenCalledTimes(mockTimes);
+  })
 });
 
 describe('Testing itemsService.deleteItem', () => {
