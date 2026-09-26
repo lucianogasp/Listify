@@ -6,7 +6,7 @@ type LoginCardChildren = {
 };
 
 export const LoginCard = ({ children }: LoginCardChildren) => {
-  return(
+  return (
     <div className="login-card">
       {children}
     </div>

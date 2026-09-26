@@ -10,3 +10,14 @@
 
   padding: .5rem;
 }
+.list-card .title-field {
+  border-bottom: 1px solid gray;
+}
+.list-card ul {
+  list-style: none;
+}
+.list-card ul li {
+  padding: .1rem;
+  display: flex;
+  justify-content: space-between;
+}
