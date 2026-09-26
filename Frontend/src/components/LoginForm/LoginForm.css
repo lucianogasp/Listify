@@ -1,0 +1,31 @@
+form {
+  display: flex;
+  flex-direction: column;
+  gap: .2rem;
+  justify-content: center;
+  align-items: center;
+}
+
+form input, form button {
+  padding: .3rem;
+  border-radius: .3rem;
+  border-color: transparent;
+  box-shadow: -.1rem .1rem .3rem 0 grey;
+}
+
+form button {
+  background-color: lightgray;
+  width: 3rem;
+  height: 1.3rem;
+  margin-top: .2rem;
+  transition: transform .1s ease-out;
+}
+form button:hover {
+  cursor: pointer;
+  transform: scale(1.1);
+  transition: transform .1s ease-in;
+}
+
+form input:focus {
+  outline: none;
+}
