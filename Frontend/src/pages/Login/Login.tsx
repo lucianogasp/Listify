@@ -1,13 +1,13 @@
-import { Card } from '@/components/Card/Card';
+import { LoginCard } from '@/components/LoginCard/LoginCard';
 import { LoginForm } from '@/components/LoginForm/LoginForm';
 import './Login.css';
 
 export const Login = () => {
   return (
     <main className='main-container'>
-      <Card>
+      <LoginCard>
         <LoginForm />
-      </Card>
+      </LoginCard>
     </main>
   );
 }

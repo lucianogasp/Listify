@@ -1,0 +1,12 @@
+.list-card {
+  background-color: white;
+  border-radius: 1rem;
+  box-shadow: 0 0 2rem 0 grey;
+
+  width: fit-content;
+  min-width: 7rem;
+  max-width: 25rem;
+  min-height: 5rem;
+
+  padding: .5rem;
+}
