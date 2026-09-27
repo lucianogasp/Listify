@@ -1,67 +1,49 @@
 import { useState } from 'react';
 
+// import components
 import { ListCard } from '@/components/ListCard/ListCard';
 import { AddListCard } from '@/components/AddListCard/AddListCard';
 import './Dashboard.css';
 
+// import modules
 import { ApiService } from '@/services/ApiService';
 import { TokenErrorHandler } from '@/errorHandlers/TokenErrorHandler';
 import { ResponseErrorHandler } from '@/errorHandlers/ResponseErrorHandler';
 
-import type { ListApi, ItemApi } from './Dashboard.data';
+// import types
+import type { ListsData, ItemsData, MethodApi } from './Dashboard.data';
 
 const token = localStorage.getItem('token');
 
-interface ListsData {
-  lists: ListApi[]
-}
-interface ItemsData {
-  items: ItemApi[]
-}
-
-const getAllLists = async (): Promise<ListsData | undefined> => {
+const getAllRegistersApi = async <TData,>(
+  token: string | null, 
+  url: string, 
+  method: MethodApi
+): Promise<TData | undefined> => {
   try {
     TokenErrorHandler.verifyToken(token);
+    const apiService = new ApiService(url, token as string);
+    const response = await apiService.fetchApi(method);
 
-    const listsService = new ApiService(
-      'http://localhost:3000/lists',
-      token as string
-    );
-    const listsResponseApi = await listsService.fetchApi('GET');
-
-    ResponseErrorHandler.responseIsOk(listsResponseApi);
-    const listsData: ListsData = await listsResponseApi.json();
-
-    return listsData;
-  } catch(err) {
-    console.error(err);
-  }
-}
-
-const getAllItems = async (): Promise<ItemsData | undefined> => {
-  try {
-    TokenErrorHandler.verifyToken(token);
-
-    const itemsService = new ApiService(
-      'http://localhost:3000/lists/items',
-      token as string
-    );
-    const itemsResponseApi = await itemsService.fetchApi('GET');
-
-    ResponseErrorHandler.responseIsOk(itemsResponseApi);
-    const itemsData: ItemsData = await itemsResponseApi.json();
-
-    return itemsData;
+    ResponseErrorHandler.responseIsOk(response);
+    const data: TData = await response.json();
+    return data;
   } catch(err) {
     console.error(err);
   }
 }
 
 export const Dashboard = async () => {
-  
-  const [lists, setLists] = useState(await getAllLists());
-  const [items, setItems] = useState(await getAllItems());
-
+  const [lists, setLists] = useState(await getAllRegistersApi<ListsData>(
+    token,
+    'http://localhost:3000/lists',
+    'GET'
+  ));
+  const [items, setItems] = useState(await getAllRegistersApi<ItemsData>(
+    token,
+    'http://localhost:3000/lists/items',
+    'GET'
+  ));
 
   return (
     <main className='dashboard-main-container'>

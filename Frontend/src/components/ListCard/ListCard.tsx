@@ -1,7 +1,7 @@
 // import type { ReactNode } from 'react';
 import './ListCard.css';
 
-export const ListCard = () => {
+export const ListCard = ({}) => {
   return (
     <section className='list-card'>
       <div className='title-field'>
