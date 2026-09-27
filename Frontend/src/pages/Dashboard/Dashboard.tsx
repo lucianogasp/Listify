@@ -1,44 +1,67 @@
+import { useState } from 'react';
+
 import { ListCard } from '@/components/ListCard/ListCard';
 import { AddListCard } from '@/components/AddListCard/AddListCard';
 import './Dashboard.css';
 
-// const listsApi: string = 'http://localhost:3000/lists';
-// type LoginPost = {
-//   email: string,
-//   password: string
-// }
-// const loginObject: LoginPost = {
-//   email: 'lucianogasp1@gmail',
-//   password: '123123'
-// }
-// type requestConfig = {
-//   method: string,
-//   headers: {
-//     'content_Type': string,
-//   },
-//   body: string
-// }
-// const requestObject: requestConfig = {
-//   method: 'POST',
-//   headers: {
-//     'content_Type': 'application/json'
-//   },
-//   body: JSON.stringify(loginObject)
-// }
+import { ApiService } from '@/services/ApiService';
+import { TokenErrorHandler } from '@/errorHandlers/TokenErrorHandler';
+import { ResponseErrorHandler } from '@/errorHandlers/ResponseErrorHandler';
 
-export const Dashboard = () => {
+import type { ListApi, ItemApi } from './Dashboard.data';
 
-  // try {
-  //   const response: Response = await fetch(
-  //     listsApi,
-  //     requestObject
-  //   );
-  //   const token: string = await response.json();
+const token = localStorage.getItem('token');
 
-  // } catch(err) {
-  //   console.log('__Stuck in error log__');
-  //   console.error(err);
-  // }
+interface ListsData {
+  lists: ListApi[]
+}
+interface ItemsData {
+  items: ItemApi[]
+}
+
+const getAllLists = async (): Promise<ListsData | undefined> => {
+  try {
+    TokenErrorHandler.verifyToken(token);
+
+    const listsService = new ApiService(
+      'http://localhost:3000/lists',
+      token as string
+    );
+    const listsResponseApi = await listsService.fetchApi('GET');
+
+    ResponseErrorHandler.responseIsOk(listsResponseApi);
+    const listsData: ListsData = await listsResponseApi.json();
+
+    return listsData;
+  } catch(err) {
+    console.error(err);
+  }
+}
+
+const getAllItems = async (): Promise<ItemsData | undefined> => {
+  try {
+    TokenErrorHandler.verifyToken(token);
+
+    const itemsService = new ApiService(
+      'http://localhost:3000/lists/items',
+      token as string
+    );
+    const itemsResponseApi = await itemsService.fetchApi('GET');
+
+    ResponseErrorHandler.responseIsOk(itemsResponseApi);
+    const itemsData: ItemsData = await itemsResponseApi.json();
+
+    return itemsData;
+  } catch(err) {
+    console.error(err);
+  }
+}
+
+export const Dashboard = async () => {
+  
+  const [lists, setLists] = useState(await getAllLists());
+  const [items, setItems] = useState(await getAllItems());
+
 
   return (
     <main className='dashboard-main-container'>

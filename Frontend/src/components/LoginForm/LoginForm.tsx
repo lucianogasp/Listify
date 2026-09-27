@@ -1,7 +1,8 @@
 import './LoginForm.css';
 
-import { AuthErrorHandler } from '@/errorHandlers/AuthErrorHandler';
-import { AuthService } from '@/services/AuthService';
+import { ApiService } from '@/services/ApiService';
+import { ValidateFormData } from '@/utils/ValidateFormData';
+import { ResponseErrorHandler } from '@/errorHandlers/ResponseErrorHandler';
 
 export const LoginForm = () => {
 
@@ -32,19 +33,21 @@ export const LoginForm = () => {
     const passwordForm = formData.get('password');
 
     try {
-      AuthErrorHandler.validateFormDataValueType(emailForm, 'string');
-      AuthErrorHandler.validateFormDataValueType(passwordForm, 'string');
+      ValidateFormData.validateType(emailForm, 'string');
+      ValidateFormData.validateType(passwordForm, 'string');
 
-      const registerAuthService = new AuthService<RegisterBodyRequest>(
-        'http://localhost:3000/register',
+      const registerService = new ApiService(
+        'http://localhost:3000/register'
+      );
+      const responseApi = await registerService.fetchApi<RegisterBodyRequest>(
+        'POST',
         {
           email: emailForm as string,
           password: passwordForm as string
         }
       );
-      const responseApi: Response = await registerAuthService.fetchApi();
 
-      AuthErrorHandler.authResponseIsOk(responseApi);
+      ResponseErrorHandler.responseIsOk(responseApi);
 
       const data: DataResponse = await responseApi.json();
       localStorage.setItem('token', data.token);
@@ -54,7 +57,7 @@ export const LoginForm = () => {
     }
   }
 
-  const handleLogin = async (formData: FormData) => {
+  const handleLogin = async (formData: FormData): Promise<void> => {
     
     interface LoginBodyRequest {
       email: string,
@@ -68,19 +71,21 @@ export const LoginForm = () => {
     const passwordForm = formData.get('password');
 
     try {
-      AuthErrorHandler.validateFormDataValueType(emailForm, 'string');
-      AuthErrorHandler.validateFormDataValueType(passwordForm, 'string');
+      ValidateFormData.validateType(emailForm, 'string');
+      ValidateFormData.validateType(passwordForm, 'string');
 
-      const loginAuthService = new AuthService<LoginBodyRequest>(
-        'http://localhost:3000/login',
+      const loginService = new ApiService(
+        'http://localhost:3000/login'
+      );
+      const responseApi = await loginService.fetchApi<LoginBodyRequest>(
+        'POST',
         {
           email: emailForm as string,
           password: passwordForm as string
         }
       );
-      const responseApi: Response = await loginAuthService.fetchApi();
 
-      AuthErrorHandler.authResponseIsOk(responseApi);
+      ResponseErrorHandler.responseIsOk(responseApi);
 
       const data: DataResponse = await responseApi.json();
       localStorage.setItem('token', data.token);
