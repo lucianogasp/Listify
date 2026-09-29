@@ -1,3 +1,4 @@
+import jwt from 'jsonwebtoken';
 import { AppError } from "#errors/app.error.js";
 import { AuthToken } from "#services/AuthToken.js";
 
@@ -14,6 +15,11 @@ export const authMiddleware = (req, res, next) => {
     req.userId = decoded.userId;
     next();
   } catch(err) {
+    if (err instanceof jwt.JsonWebTokenError) {
+      return res
+        .status(401)
+        .json({ message: 'Invalid Token' });
+    }
     if (err instanceof AppError) {
       return next(err);
     }

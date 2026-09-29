@@ -1,10 +1,11 @@
-interface ListApi {
+export interface ListApi {
   id: number;
   user_id: number;
   name: string;
   description: string;
 }
-interface ItemApi {
+
+export interface ItemApi {
   id: number;
   list_id: number;
   title: string;
@@ -12,10 +13,12 @@ interface ItemApi {
   status: 'PENDING' | 'IN_PROGRESS' | 'COMPLETED' | 'CANCELLED';
 }
 
-export interface ListsData {
+export type ListsData = {
   lists: ListApi[]
-}
-export interface ItemsData {
+} | undefined;
+
+export type ItemsData = {
   items: ItemApi[]
-}
+} | undefined;
+
 export type MethodApi = 'POST' | 'GET' | 'PUT' | 'PATCH' | 'DELETE';
