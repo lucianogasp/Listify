@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 
 // import components
 import { ListCard } from '@/components/ListCard/ListCard';
+import { ItemCard } from '@/components/ItemCard/ItemCard';
 import { AddListCard } from '@/components/AddListCard/AddListCard';
 import './Dashboard.css';
 
@@ -20,7 +21,6 @@ import {
 } from './Dashboard.data';
 
 const token = localStorage.getItem('token');
-console.log(token);
 
 const getAllRegistersApi = async <TData,>(
   token: string | null, 
@@ -64,20 +64,26 @@ export const Dashboard = () => {
 
     getAllApi();
   }, []);
-  
-  console.log(listArr);
-  console.log(itemArr);
+
   return (
     <main className='dashboard-main-container'>
-      {listArr.length > 0 && listArr.map((list) => (
-        itemArr
-          .filter((item) => {
-            return item.list_id === list.id
-          })
-          .map((item) => {
-            return <ListCard key={item.id} list={list} item={item}/>
-        })
-      ))}
+      {listArr
+        .map((list) => (
+          <ListCard key={list.id} name={list.name} description={list.description}>
+            {itemArr
+              .filter((item) => (item.list_id === list.id))
+              .map((item) => (
+                <ItemCard 
+                  key={item.id} 
+                  title={item.title} 
+                  is_prioritized={item.is_prioritized} 
+                  status={item.status}
+                />
+              ))
+            }
+          </ListCard>
+        ))
+      }
       <AddListCard />
     </main>
   );

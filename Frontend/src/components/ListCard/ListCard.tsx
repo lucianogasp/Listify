@@ -1,23 +1,22 @@
-// import type { ReactNode } from 'react';
 import './ListCard.css';
 
-import { type ListApi } from '@/pages/Dashboard/Dashboard.data';
-import { type ItemApi } from '@/pages/Dashboard/Dashboard.data';
-
 type ListCardProps = {
-  list: ListApi,
-  item: ItemApi
-}
+  name: string,
+  description: string,
+  children: React.ReactNode
+};
 
-export const ListCard = ({ list, item }: ListCardProps) => {
+export const ListCard = ({ name, description, children }: ListCardProps) => {
   return (
     <section className='list-card'>
-      <div className='title-field'>
-        <h1>{list.name}</h1>
+      <div className='name-field'>
+        <h1>{name}</h1>
+      </div>
+      <div className='description-field'>
+        <p>{description}</p>
       </div>
       <ul>
-        <li>{item.title}</li>
-        <span>{item.status}</span>
+        <li>{children}</li>
       </ul>
     </section>
   );
