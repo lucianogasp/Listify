@@ -7,11 +7,11 @@ export const errorMiddleware = (err, req, res, next) => {
       .status(400)
       .json({
         message: 'Invalid request data',
-        erros : err.issues
+        error : err.issues
       });
   }
 
   return res
     .status(err.status || 500)
-    .json({ message: err.message });
+    .json({ error: err.message });
 }

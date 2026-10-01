@@ -1,45 +1,60 @@
+import { useNavigate, type NavigateFunction } from 'react-router-dom';
+
+// import components
 import './LoginForm.css';
 
+// import modules
 import { ApiService } from '@/services/ApiService';
 import { ValidateFormData } from '@/utils/ValidateFormData';
 import { ResponseErrorHandler } from '@/errorHandlers/ResponseErrorHandler';
 
+// import types
+import { type MethodApi } from '@/pages/Dashboard/Dashboard.data';
+type BodyObject = {
+  email: string,
+  password: string
+}
+type TokenResponse = {
+  token: string
+}
+
+const postRegisterApi = async <TData,>(endpoint: string, method: MethodApi, bodyObject: BodyObject): Promise<TData> => {
+  const apiService = new ApiService(endpoint);
+  const responseApi = await apiService.fetchApi<BodyObject>(
+    method,
+    bodyObject
+  );
+  ResponseErrorHandler.responseIsOk(responseApi);
+
+  const data: TData = await responseApi.json();
+  return data;
+}
+
 export const LoginForm = () => {
+  const navigate = useNavigate();
 
-  const handleSubmit = (event: React.SubmitEvent<HTMLFormElement>): void => {
+  const handleSubmit = async (event: React.SubmitEvent<HTMLFormElement>): Promise<void> => {
     event.preventDefault();
-
+    
     const formData = new FormData(event.currentTarget);
+    const emailForm = formData.get('email');
+    const passwordForm = formData.get('password');
+
     const action = (event.nativeEvent.submitter as HTMLButtonElement).value;
+    let endpoint;
     if(action === 'login') {
-      handleLogin(formData);
+      endpoint = 'http://localhost:3000/login';
     }
     if (action === 'register') {
-      handleRegister(formData);
+      endpoint = 'http://localhost:3000/register';
     }
-  }
-
-  const handleRegister = async (formData: FormData): Promise<void> => {
-    
-    interface RegisterBodyRequest {
-      email: string,
-      password: string
-    }
-    interface DataResponse {
-      token: string
-    }
-    
-    const emailForm = formData.get('email');
-    const passwordForm = formData.get('password');
 
     try {
       ValidateFormData.validateType(emailForm, 'string');
       ValidateFormData.validateType(passwordForm, 'string');
 
-      const registerService = new ApiService(
-        'http://localhost:3000/register'
-      );
-      const responseApi = await registerService.fetchApi<RegisterBodyRequest>(
+      const dataToken = await postRegisterApi<TokenResponse>(
+        endpoint as string,
         'POST',
         {
           email: emailForm as string,
@@ -47,51 +62,13 @@ export const LoginForm = () => {
         }
       );
 
-      ResponseErrorHandler.responseIsOk(responseApi);
+      localStorage.setItem('token', dataToken.token);
 
-      const data: DataResponse = await responseApi.json();
-      localStorage.setItem('token', data.token);
-      
     } catch(err) {
       console.error(err);
-    }
-  }
 
-  const handleLogin = async (formData: FormData): Promise<void> => {
-    
-    interface LoginBodyRequest {
-      email: string,
-      password: string
-    }
-    interface DataResponse {
-      token: string
-    }
-    
-    const emailForm = formData.get('email');
-    const passwordForm = formData.get('password');
-
-    try {
-      ValidateFormData.validateType(emailForm, 'string');
-      ValidateFormData.validateType(passwordForm, 'string');
-
-      const loginService = new ApiService(
-        'http://localhost:3000/login'
-      );
-      const responseApi = await loginService.fetchApi<LoginBodyRequest>(
-        'POST',
-        {
-          email: emailForm as string,
-          password: passwordForm as string
-        }
-      );
-
-      ResponseErrorHandler.responseIsOk(responseApi);
-
-      const data: DataResponse = await responseApi.json();
-      localStorage.setItem('token', data.token);
-      
-    } catch(err) {
-      console.error(err);
+    } finally {
+      navigate('/dashboard');
     }
   }
 
