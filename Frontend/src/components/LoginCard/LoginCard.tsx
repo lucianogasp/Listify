@@ -1,5 +1,7 @@
-import type { ReactNode } from 'react';
 import './LoginCard.css';
+
+// import types
+import type { ReactNode } from 'react';
 
 type LoginCardChildren = {
   children: ReactNode;

@@ -12,9 +12,10 @@ export const ListCard = ({ name, description, children }: ListCardProps) => {
       <div className='name-field'>
         <h1>{name}</h1>
       </div>
-      <div className='description-field'>
+      <div>
         <p>{description}</p>
       </div>
+      
       <ul>
         <li>{children}</li>
       </ul>

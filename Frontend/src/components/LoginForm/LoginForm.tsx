@@ -1,15 +1,14 @@
-import { useNavigate, type NavigateFunction } from 'react-router-dom';
-
-// import components
-import './LoginForm.css';
+import { useNavigate } from 'react-router-dom';
 
 // import modules
 import { ApiService } from '@/services/ApiService';
 import { ValidateFormData } from '@/utils/ValidateFormData';
 import { ResponseErrorHandler } from '@/errorHandlers/ResponseErrorHandler';
+import './LoginForm.css';
 
 // import types
 import { type MethodApi } from '@/pages/Dashboard/Dashboard.data';
+
 type BodyObject = {
   email: string,
   password: string
@@ -18,7 +17,11 @@ type TokenResponse = {
   token: string
 }
 
-const postRegisterApi = async <TData,>(endpoint: string, method: MethodApi, bodyObject: BodyObject): Promise<TData> => {
+const postRegisterApi = async <TData,>(
+  endpoint: string, 
+  method: MethodApi, 
+  bodyObject: BodyObject
+): Promise<TData> => {
   const apiService = new ApiService(endpoint);
   const responseApi = await apiService.fetchApi<BodyObject>(
     method,
@@ -78,7 +81,7 @@ export const LoginForm = () => {
       <input name='password' type="text" placeholder='Password' required/>
 
       <button value='login'>Login</button>
-      <button value='register'>Sign In</button>
+      <button value='register'>Register</button>
     </form>
   );
 }

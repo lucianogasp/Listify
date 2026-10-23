@@ -10,7 +10,7 @@ export const ItemCard = ({ title, is_prioritized, status }: ItemCardProps) => {
   return (
     <section className='item-card'>
       <h1>{title}</h1>
-      <span>...</span>
+      <span>{status}</span>
     </section>
   );
 }

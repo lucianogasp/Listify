@@ -4,12 +4,12 @@ import { useState, useEffect } from 'react';
 import { ListCard } from '@/components/ListCard/ListCard';
 import { ItemCard } from '@/components/ItemCard/ItemCard';
 import { AddListCard } from '@/components/AddListCard/AddListCard';
-import './Dashboard.css';
 
 // import modules
 import { ApiService } from '@/services/ApiService';
 import { TokenErrorHandler } from '@/errorHandlers/TokenErrorHandler';
 import { ResponseErrorHandler } from '@/errorHandlers/ResponseErrorHandler';
+import './Dashboard.css';
 
 // import types
 import { 
@@ -24,17 +24,18 @@ const token = localStorage.getItem('token');
 
 const getAllRegistersApi = async <TData,>(
   token: string | null, 
-  url: string, 
+  endpoint: string, 
   method: MethodApi
 ): Promise<TData | undefined> => {
   try {
     TokenErrorHandler.verifyToken(token);
-    const apiService = new ApiService(url, token as string);
-    const response = await apiService.fetchApi<undefined>(method);
+    const apiService = new ApiService(endpoint, token as string);
+    const response = await apiService.fetchApi<null>(method);
 
     ResponseErrorHandler.responseIsOk(response);
     const data: TData = await response.json();
     return data;
+    
   } catch(err) {
     console.error(err);
   }
@@ -69,7 +70,11 @@ export const Dashboard = () => {
     <main className='dashboard-main-container'>
       {listArr
         .map((list) => (
-          <ListCard key={list.id} name={list.name} description={list.description}>
+          <ListCard 
+            key={list.id} 
+            name={list.name} 
+            description={list.description}
+          >
             {itemArr
               .filter((item) => (item.list_id === list.id))
               .map((item) => (
@@ -84,6 +89,7 @@ export const Dashboard = () => {
           </ListCard>
         ))
       }
+      
       <AddListCard />
     </main>
   );
