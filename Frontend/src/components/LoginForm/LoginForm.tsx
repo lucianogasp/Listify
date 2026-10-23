@@ -23,13 +23,13 @@ const postRegisterApi = async <TData,>(
   bodyObject: BodyObject
 ): Promise<TData> => {
   const apiService = new ApiService(endpoint);
-  const responseApi = await apiService.fetchApi<BodyObject>(
+  const response = await apiService.fetchApi<BodyObject>(
     method,
     bodyObject
-  );
-  ResponseErrorHandler.responseIsOk(responseApi);
-
-  const data: TData = await responseApi.json();
+  );  
+  const data: TData = await response.json();
+ 
+  ResponseErrorHandler.verifyHTTPResponse(response, data);
   return data;
 }
 

@@ -29,13 +29,13 @@ const getAllRegistersApi = async <TData,>(
 ): Promise<TData | undefined> => {
   try {
     TokenErrorHandler.verifyToken(token);
+
     const apiService = new ApiService(endpoint, token as string);
     const response = await apiService.fetchApi<null>(method);
-
-    ResponseErrorHandler.responseIsOk(response);
     const data: TData = await response.json();
-    return data;
     
+    ResponseErrorHandler.verifyHTTPResponse(response, data);
+    return data;
   } catch(err) {
     console.error(err);
   }

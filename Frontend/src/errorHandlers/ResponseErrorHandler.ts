@@ -1,6 +1,8 @@
+import { ApiError } from "@/errors/ApiError";
+
 export class ResponseErrorHandler {
   
-  static responseIsOk(response: Response): void {
-    if(!response.ok) throw new Error(`Response is not ok >> Status Code: ${response.status} Type: ${response.statusText}`);
+  static verifyHTTPResponse(response: Response, data: unknown): void {
+    if(!response.ok) throw new ApiError('Response API is not OK', response, data);
   }
 }

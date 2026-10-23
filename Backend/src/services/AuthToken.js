@@ -1,8 +1,6 @@
 import jwt from 'jsonwebtoken';
 import 'dotenv/config';
 
-import { AppError } from '#errors/app.error.js';
-
 export class AuthToken {
 
   constructor(objectConfig = {
@@ -14,11 +12,10 @@ export class AuthToken {
   }
 
   generateJWT = (userId) => {
-    const secret = this.secret;
     return jwt.sign(
-      {userId}, // payload
-      secret, // Secret
-      {expiresIn: this.objectConfig.expiresInTime} // config Token
+      { userId }, // payload
+      this.secret, // Secret
+      { expiresIn: this.objectConfig.expiresInTime } // config Token
     );
   }
 
