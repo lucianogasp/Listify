@@ -20,8 +20,6 @@ import {
   type MethodApi 
 } from './Dashboard.data';
 
-const token = localStorage.getItem('token');
-
 const getAllRegistersApi = async <TData,>(
   token: string | null, 
   endpoint: string, 
@@ -45,6 +43,8 @@ export const Dashboard = () => {
 
   const [listArr, setLists] = useState<ListApi[]>([]);
   const [itemArr, setItems] = useState<ItemApi[]>([]);
+
+  const token = localStorage.getItem('token');
 
   useEffect((): void => {
     const getAllApi = async (): Promise<void> => {
