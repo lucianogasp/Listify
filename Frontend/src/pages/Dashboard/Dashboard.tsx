@@ -2,8 +2,8 @@ import { useState, useEffect } from 'react';
 
 // import components
 import { ListCard } from '@/components/ListCard/ListCard';
-import { ItemCard } from '@/components/ItemCard/ItemCard';
 import { AddListCard } from '@/components/AddListCard/AddListCard';
+import { UpdateButton } from '@/components/UpdateButton/UpdateButton';
 
 // import modules
 import { ApiService } from '@/services/ApiService';
@@ -37,6 +37,10 @@ const getAllRegistersApi = async <TData,>(
   } catch(err) {
     console.error(err);
   }
+}
+
+const handleUpdate = (): void => {
+  console.log('handle update activate...');
 }
 
 export const Dashboard = () => {
@@ -79,6 +83,8 @@ export const Dashboard = () => {
       ))}
       
       <AddListCard />
+
+      <UpdateButton onUpdate={handleUpdate} />
     </main>
   );
 }

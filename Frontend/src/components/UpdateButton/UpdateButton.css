@@ -1,0 +1,13 @@
+.update-button button {
+  background-color: lightskyblue;
+  border-radius: 1rem;
+  box-shadow: 0 0 2rem 0 grey;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  width: 7rem;
+  height: 4rem;
+  padding: .5rem;
+}
