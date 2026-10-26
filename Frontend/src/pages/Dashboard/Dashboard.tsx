@@ -68,27 +68,15 @@ export const Dashboard = () => {
 
   return (
     <main className='dashboard-main-container'>
-      {listArr
-        .map((list) => (
-          <ListCard 
-            key={list.id} 
-            name={list.name} 
-            description={list.description}
-          >
-            {itemArr
-              .filter((item) => (item.list_id === list.id))
-              .map((item) => (
-                <ItemCard 
-                  key={item.id} 
-                  title={item.title} 
-                  is_prioritized={item.is_prioritized} 
-                  status={item.status}
-                />
-              ))
-            }
-          </ListCard>
-        ))
-      }
+      {listArr.map((list) => (
+        <ListCard 
+          key={list.id} 
+          name={list.name} 
+          description={list.description}
+          items={itemArr.filter((item) => item.list_id === list.id)}
+        >
+        </ListCard>
+      ))}
       
       <AddListCard />
     </main>
