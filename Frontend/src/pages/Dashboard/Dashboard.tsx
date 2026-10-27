@@ -50,41 +50,45 @@ export const Dashboard = () => {
 
   const token = localStorage.getItem('token');
 
-  useEffect((): void => {
-    const getAllApi = async (): Promise<void> => {
-      const listsData = await getAllRegistersApi<ListsData>(
-        token,
-        'http://localhost:3000/lists',
-        'GET'
-      );
-      const itemsData = await getAllRegistersApi<ItemsData>(
-        token,
-        'http://localhost:3000/lists/items',
-        'GET'
-      );
+  const getAllApi = async (): Promise<void> => {
+    const listsData = await getAllRegistersApi<ListsData>(
+      token,
+      'http://localhost:3000/lists',
+      'GET'
+    );
+    const itemsData = await getAllRegistersApi<ItemsData>(
+      token,
+      'http://localhost:3000/lists/items',
+      'GET'
+    );
 
-      if(listsData) setLists(listsData.lists);
-      if(itemsData) setItems(itemsData.items);
-    }
+    if(listsData) setLists(listsData.lists);
+    if(itemsData) setItems(itemsData.items);
+  }
+  
+  useEffect((): void => {
 
     getAllApi();
   }, []);
 
   return (
     <main className='dashboard-main-container'>
+    <ul>
       {listArr.map((list) => (
-        <ListCard 
-          key={list.id} 
-          name={list.name} 
-          description={list.description}
-          items={itemArr.filter((item) => item.list_id === list.id)}
-        >
-        </ListCard>
+        <li key={list.id}>
+          <ListCard 
+            name={list.name} 
+            description={list.description}
+            items={itemArr.filter((item) => item.list_id === list.id)}
+          >
+          </ListCard>
+        </li>
       ))}
       
-      <AddListCard />
+      <li><AddListCard /></li>
 
-      <UpdateButton onUpdate={handleUpdate} />
+      <li><UpdateButton onUpdate={handleUpdate} /></li>
+    </ul>
     </main>
   );
 }
