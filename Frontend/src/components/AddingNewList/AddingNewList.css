@@ -1,0 +1,33 @@
+.adding-new-list {
+  background-color: white;
+  border-radius: 1rem;
+  box-shadow: 0 0 2rem 0 grey;
+
+  width: fit-content;
+  min-width: 15rem;
+  max-width: 25rem;
+  min-height: 5rem;
+
+  padding: .5rem;
+}
+.adding-new-list .name-field {
+  border-bottom: 1px solid gray;
+}
+.adding-new-list input {
+  background: transparent;
+
+  width: 100%;
+  padding: .2rem .4rem;
+
+  outline: none;
+  font-size: 1rem;
+  font-weight: 700;
+  border: 1px solid transparent;
+  border-radius: .5rem;
+
+  transition: border .2s ease;
+}
+.adding-new-list input:focus {
+  border: 1px solid black;
+  transition: border .2s ease;
+}

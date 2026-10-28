@@ -12,6 +12,7 @@
 }
 .list-card .name-field {
   border-bottom: 1px solid gray;
+  padding: .2rem 0;
 }
 .list-card ul {
   list-style: none;

@@ -2,8 +2,9 @@ import { useState, useEffect } from 'react';
 
 // import components
 import { ListCard } from '@/components/ListCard/ListCard';
-import { AddListCard } from '@/components/AddListCard/AddListCard';
-import { UpdateButton } from '@/components/UpdateButton/UpdateButton';
+import { AddingNewList } from '@/components/AddingNewList/AddingNewList';
+import { AddNewList } from '@/components/AddNewList/AddNewList';
+import { PostListButton } from '@/components/PostListButton/PostListButton';
 
 // import modules
 import { ApiService } from '@/services/ApiService';
@@ -39,14 +40,19 @@ const getAllRegistersApi = async <TData,>(
   }
 }
 
-const handleUpdate = (): void => {
-  console.log('handle update activate...');
-}
-
 export const Dashboard = () => {
 
   const [listArr, setLists] = useState<ListApi[]>([]);
   const [itemArr, setItems] = useState<ItemApi[]>([]);
+  const [isAddingNewList, setIsAddingNewList] = useState<boolean>(false);
+
+  const handlePostList = (): void => {
+    if(isAddingNewList) {      
+      console.log('handle post list activate...');
+    }
+
+    setIsAddingNewList(false);
+  }
 
   const token = localStorage.getItem('token');
 
@@ -85,9 +91,13 @@ export const Dashboard = () => {
         </li>
       ))}
       
-      <li><AddListCard /></li>
+      <li>
+        {isAddingNewList ? (<AddingNewList />) : (<AddNewList createNewList={() => setIsAddingNewList(true)} />)}
+      </li>
 
-      <li><UpdateButton onUpdate={handleUpdate} /></li>
+      <li>
+        <PostListButton onPost={handlePostList} />
+      </li>
     </ul>
     </main>
   );
