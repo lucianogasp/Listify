@@ -8,6 +8,7 @@ import { PostListButton } from '@/components/PostListButton/PostListButton';
 
 // import modules
 import { ApiService } from '@/services/ApiService';
+import { ApiHandler } from '@/services/ApiHandler';
 import { TokenErrorHandler } from '@/errorHandlers/TokenErrorHandler';
 import { ResponseErrorHandler } from '@/errorHandlers/ResponseErrorHandler';
 import './Dashboard.css';
@@ -42,9 +43,47 @@ const getAllRegistersApi = async <TData,>(
 
 export const Dashboard = () => {
 
-  const [listArr, setLists] = useState<ListApi[]>([]);
-  const [itemArr, setItems] = useState<ItemApi[]>([]);
+  const [listArr, setListArr] = useState<ListApi[]>([]);
+  const [itemArr, setItemArr] = useState<ItemApi[]>([]);
   const [isAddingNewList, setIsAddingNewList] = useState<boolean>(false);
+
+  const updateArr = (listsData: ListsData, itemsData: ItemsData): void => {
+    if(listsData) setListArr(listsData.lists);
+    if(itemsData) setItemArr(itemsData.items);
+  };
+
+  const getAllLists = async <TData,>(): Promise<TData| undefined>  => {
+    const token = localStorage.getItem('token') ?? undefined;
+    try {
+      const listsApiService = ApiHandler.createInstance(
+        'http://localhost:3000/lists',
+        token
+      );
+      const data = await ApiHandler.request<TData>(
+        listsApiService,
+        'GET'
+      );
+      return data;
+    } catch(err) {
+      console.error(err);
+    }
+  };
+  const getAllItems = async <TData,>(): Promise<TData| undefined>  => {
+    const token = localStorage.getItem('token') ?? undefined;
+    try {
+      const itemsApiService = ApiHandler.createInstance(
+        'http://localhost:3000/lists/items',
+        token
+      );
+      const data = await ApiHandler.request<TData>(
+        itemsApiService,
+        'GET'
+      );
+      return data;
+    } catch(err) {
+      console.error(err);
+    }
+  };
 
   const handlePostList = (): void => {
     if(isAddingNewList) {      
@@ -52,29 +91,15 @@ export const Dashboard = () => {
     }
 
     setIsAddingNewList(false);
-  }
-
-  const token = localStorage.getItem('token');
-
-  const getAllApi = async (): Promise<void> => {
-    const listsData = await getAllRegistersApi<ListsData>(
-      token,
-      'http://localhost:3000/lists',
-      'GET'
-    );
-    const itemsData = await getAllRegistersApi<ItemsData>(
-      token,
-      'http://localhost:3000/lists/items',
-      'GET'
-    );
-
-    if(listsData) setLists(listsData.lists);
-    if(itemsData) setItems(itemsData.items);
-  }
+  };
   
   useEffect((): void => {
 
-    getAllApi();
+    (async (): Promise<void> => {
+      const listsData = await getAllLists<ListsData>();
+      const itmesData = await getAllItems<ItemsData>();
+      updateArr(listsData, itmesData);
+    })();
   }, []);
 
   return (
