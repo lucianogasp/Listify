@@ -1,72 +1,64 @@
 import { useNavigate } from 'react-router-dom';
 
 // import modules
-import { ApiService } from '@/services/ApiService';
+import { ApiHandler } from '@/services/ApiHandler';
 import { ValidateFormData } from '@/utils/ValidateFormData';
-import { ResponseErrorHandler } from '@/errorHandlers/ResponseErrorHandler';
 import './LoginForm.css';
 
-// import types
-import { type MethodApi } from '@/pages/Dashboard/Dashboard.data';
-
-type BodyObject = {
-  email: string,
-  password: string
-}
 type TokenResponse = {
   token: string
-}
-
-const postRegisterApi = async <TData,>(
-  endpoint: string, 
-  method: MethodApi, 
-  bodyObject: BodyObject
-): Promise<TData> => {
-  const apiService = new ApiService(endpoint);
-  const response = await apiService.fetchApi<BodyObject>(
-    method,
-    bodyObject
-  );  
-  const data: TData = await response.json();
- 
-  ResponseErrorHandler.verifyHTTPResponse(response, data);
-  return data;
 }
 
 export const LoginForm = () => {
   const navigate = useNavigate();
 
-  const handleSubmit = async (event: React.SubmitEvent<HTMLFormElement>): Promise<void> => {
-    event.preventDefault();
-    
-    const formData = new FormData(event.currentTarget);
-    const emailForm = formData.get('email');
-    const passwordForm = formData.get('password');
-
-    const action = (event.nativeEvent.submitter as HTMLButtonElement).value;
-    let endpoint;
-    if(action === 'login') {
-      endpoint = 'http://localhost:3000/login';
-    }
-    if (action === 'register') {
-      endpoint = 'http://localhost:3000/register';
-    }
-
+  const postLoginOrRegister = async <TData,>(formData: FormData, endpoint: string): Promise<TData | undefined> => {
     try {
+      const emailForm = formData.get('email');
+      const passwordForm = formData.get('password');
       ValidateFormData.validateType(emailForm, 'string');
       ValidateFormData.validateType(passwordForm, 'string');
 
-      const dataToken = await postRegisterApi<TokenResponse>(
-        endpoint as string,
+      const apiService = ApiHandler.createInstance(
+        endpoint
+      );
+      const data = await ApiHandler.request<TData>(
+        apiService,
         'POST',
         {
           email: emailForm as string,
           password: passwordForm as string
         }
       );
+      return data;
+    } catch(err) {
+      console.error(err);
+    }
+  }
 
-      localStorage.setItem('token', dataToken.token);
+  const handleSubmit = async (event: React.SubmitEvent<HTMLFormElement>): Promise<void> => {
+    event.preventDefault();
+    
+    const formData = new FormData(event.currentTarget);
+    try {
+      const action = (event.nativeEvent.submitter as HTMLButtonElement).value;
+      let endpoint: string | undefined;
+      if(action === 'login') {
+        endpoint = 'http://localhost:3000/login';
+      } else if (action === 'register') {
+        endpoint = 'http://localhost:3000/register';
+      }
 
+      if(!endpoint) {
+        throw new Error('Invalid action. Must be: "login" or "register"');
+      }
+      const data = await postLoginOrRegister<TokenResponse>(
+        formData,
+        endpoint
+      );
+      if(data) {
+        localStorage.setItem('token', data.token);
+      }
     } catch(err) {
       console.error(err);
 
