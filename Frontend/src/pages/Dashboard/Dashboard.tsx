@@ -7,10 +7,8 @@ import { AddNewList } from '@/components/AddNewList/AddNewList';
 import { PostListButton } from '@/components/PostListButton/PostListButton';
 
 // import modules
-import { ApiService } from '@/services/ApiService';
 import { ApiHandler } from '@/services/ApiHandler';
-import { TokenErrorHandler } from '@/errorHandlers/TokenErrorHandler';
-import { ResponseErrorHandler } from '@/errorHandlers/ResponseErrorHandler';
+import { ValidateFormData } from '@/utils/ValidateFormData';
 import './Dashboard.css';
 
 // import types
@@ -19,27 +17,7 @@ import {
   type ItemApi, 
   type ListsData, 
   type ItemsData, 
-  type MethodApi 
 } from './Dashboard.data';
-
-const getAllRegistersApi = async <TData,>(
-  token: string | null, 
-  endpoint: string, 
-  method: MethodApi
-): Promise<TData | undefined> => {
-  try {
-    TokenErrorHandler.verifyToken(token);
-
-    const apiService = new ApiService(endpoint, token as string);
-    const response = await apiService.fetchApi<null>(method);
-    const data: TData = await response.json();
-    
-    ResponseErrorHandler.verifyHTTPResponse(response, data);
-    return data;
-  } catch(err) {
-    console.error(err);
-  }
-}
 
 export const Dashboard = () => {
 
@@ -47,58 +25,70 @@ export const Dashboard = () => {
   const [itemArr, setItemArr] = useState<ItemApi[]>([]);
   const [isAddingNewList, setIsAddingNewList] = useState<boolean>(false);
 
-  const updateArr = (listsData: ListsData, itemsData: ItemsData): void => {
-    if(listsData) setListArr(listsData.lists);
-    if(itemsData) setItemArr(itemsData.items);
+  const updateDashboardArray = async (): Promise<void> => {
+    try {
+      const listsData = await getAllApi<ListsData>('http://localhost:3000/lists');
+      const itemsData = await getAllApi<ItemsData>('http://localhost:3000/lists/items');
+
+      if(listsData) setListArr(listsData.lists);
+      if(itemsData) setItemArr(itemsData.items);
+    } catch(err) {
+      console.error(err);
+    }
   };
 
-  const getAllLists = async <TData,>(): Promise<TData| undefined>  => {
+  const getAllApi = async <TData,>(endpoint: string): Promise<TData | undefined> => {
     const token = localStorage.getItem('token') ?? undefined;
+
+    const apiService = ApiHandler.createInstance(
+      endpoint,
+      token
+    );
+    const data = await ApiHandler.request<TData>(
+      apiService,
+      'GET'
+    );
+    return data;
+  };
+
+  const handlePostList = async (event: React.SubmitEvent<HTMLFormElement>): Promise<void> => {
+    event.preventDefault();
+
+    if(!isAddingNewList) return;
+
+    const token = localStorage.getItem('token') ?? undefined;
+
+    const formData = new FormData(event.currentTarget);
+    const nameForm = formData.get('name');
+    const descriptionForm = formData.get('description');
     try {
-      const listsApiService = ApiHandler.createInstance(
+      ValidateFormData.validateType(nameForm, 'string');
+      ValidateFormData.validateType(descriptionForm, 'string');
+
+      const apiService = ApiHandler.createInstance(
         'http://localhost:3000/lists',
         token
       );
-      const data = await ApiHandler.request<TData>(
-        listsApiService,
-        'GET'
+      await ApiHandler.request<unknown>(
+        apiService,
+        'POST',
+        {
+          name: nameForm as string,
+          description: descriptionForm as string
+        }
       );
-      return data;
-    } catch(err) {
-      console.error(err);
-    }
-  };
-  const getAllItems = async <TData,>(): Promise<TData| undefined>  => {
-    const token = localStorage.getItem('token') ?? undefined;
-    try {
-      const itemsApiService = ApiHandler.createInstance(
-        'http://localhost:3000/lists/items',
-        token
-      );
-      const data = await ApiHandler.request<TData>(
-        itemsApiService,
-        'GET'
-      );
-      return data;
+
+      await updateDashboardArray();
+      
+      setIsAddingNewList(false);
     } catch(err) {
       console.error(err);
     }
   };
 
-  const handlePostList = (): void => {
-    if(isAddingNewList) {      
-      console.log('handle post list activate...');
-    }
-
-    setIsAddingNewList(false);
-  };
-  
   useEffect((): void => {
-
     (async (): Promise<void> => {
-      const listsData = await getAllLists<ListsData>();
-      const itmesData = await getAllItems<ItemsData>();
-      updateArr(listsData, itmesData);
+      await updateDashboardArray();
     })();
   }, []);
 
@@ -117,11 +107,11 @@ export const Dashboard = () => {
       ))}
       
       <li>
-        {isAddingNewList ? (<AddingNewList />) : (<AddNewList createNewList={() => setIsAddingNewList(true)} />)}
+        {isAddingNewList ? (<AddingNewList onPost={handlePostList} />) : (<AddNewList createNewList={() => setIsAddingNewList(true)} />)}
       </li>
 
       <li>
-        <PostListButton onPost={handlePostList} />
+        <PostListButton />
       </li>
     </ul>
     </main>

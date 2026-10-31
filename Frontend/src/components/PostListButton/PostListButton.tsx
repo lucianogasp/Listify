@@ -1,13 +1,9 @@
 import './PostListButton.css';
 
-type PostListButtonProps = {
-  onPost: () => void;
-}
-
-export const PostListButton = ({onPost}: PostListButtonProps) => {
+export const PostListButton = () => {
   return (
     <section className='post-list-button'>
-      <button onClick={onPost}>Post List</button>
+      <button type='submit' form='adding-list-form'>Post List</button>
     </section>
   );
 }

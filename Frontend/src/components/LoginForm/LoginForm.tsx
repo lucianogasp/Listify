@@ -70,7 +70,7 @@ export const LoginForm = () => {
   return (
     <form onSubmit={handleSubmit}>
       <input name='email' type="text" placeholder='Email' required/>
-      <input name='password' type="text" placeholder='Password' required/>
+      <input name='password' type="password" placeholder='Password' required/>
 
       <button value='login'>Login</button>
       <button value='register'>Register</button>
