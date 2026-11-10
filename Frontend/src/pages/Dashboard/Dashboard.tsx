@@ -25,18 +25,6 @@ export const Dashboard = () => {
   const [itemArr, setItemArr] = useState<ItemApi[]>([]);
   const [isAddingNewList, setIsAddingNewList] = useState<boolean>(false);
 
-  const updateDashboardArray = async (): Promise<void> => {
-    try {
-      const listsData = await getAllApi<ListsData>('http://localhost:3000/lists');
-      const itemsData = await getAllApi<ItemsData>('http://localhost:3000/lists/items');
-
-      if(listsData) setListArr(listsData.lists);
-      if(itemsData) setItemArr(itemsData.items);
-    } catch(err) {
-      console.error(err);
-    }
-  };
-
   const getAllApi = async <TData,>(endpoint: string): Promise<TData | undefined> => {
     const token = localStorage.getItem('token') ?? undefined;
 
@@ -49,6 +37,18 @@ export const Dashboard = () => {
       'GET'
     );
     return data;
+  };  
+  
+  const updateDashboardArray = async (): Promise<void> => {
+    try {
+      const listsData = await getAllApi<ListsData>('http://localhost:3000/lists');
+      const itemsData = await getAllApi<ItemsData>('http://localhost:3000/lists/items');
+
+      if(listsData) setListArr(listsData.lists);
+      if(itemsData) setItemArr(itemsData.items);
+    } catch(err) {
+      console.error(err);
+    }
   };
 
   const handlePostList = async (event: React.SubmitEvent<HTMLFormElement>): Promise<void> => {

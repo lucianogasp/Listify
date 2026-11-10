@@ -1,5 +1,6 @@
 import { ItemCard } from '../ItemCard/ItemCard';
 import { AddNewItem } from '../AddNewItem/AddNewItem';
+import { PostItemButton } from '../PostItemButton/PostItemButton';
 import './ListCard.css';
 
 import type { ItemApi } from '@/pages/Dashboard/Dashboard.data';
@@ -32,6 +33,8 @@ export const ListCard = ({ name, description, items }: ListCardProps) => {
         ))}
         
         <li><AddNewItem /></li>
+
+        <li><PostItemButton /></li>
       </ul>
     </section>
   );
