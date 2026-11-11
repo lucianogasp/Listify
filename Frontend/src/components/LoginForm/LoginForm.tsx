@@ -6,7 +6,7 @@ import { ValidateFormData } from '@/utils/ValidateFormData';
 import './LoginForm.css';
 
 type TokenResponse = {
-  token: string
+  token: string;
 }
 
 export const LoginForm = () => {

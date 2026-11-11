@@ -14,11 +14,11 @@ export interface ItemApi {
 }
 
 export type ListsData = {
-  lists: ListApi[]
+  lists: ListApi[];
 } | undefined;
 
 export type ItemsData = {
-  items: ItemApi[]
+  items: ItemApi[];
 } | undefined;
 
 export type MethodApi = 'POST' | 'GET' | 'PUT' | 'PATCH' | 'DELETE';

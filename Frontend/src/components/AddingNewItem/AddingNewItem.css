@@ -1,0 +1,33 @@
+.adding-new-item {
+  display: flex;
+  flex-direction: row;
+}
+.adding-new-item input {
+  background: transparent;
+
+  width: 100%;
+  padding: .2rem .4rem;
+
+  outline: none;
+  font-size: 1rem;
+  font-weight: 500;
+  border: 1px solid transparent;
+  border-radius: .5rem;
+
+  transition: border .2s ease;
+}
+.adding-new-item input:focus {
+  border: 1px solid black;
+  transition: border .2s ease;
+}
+.adding-new-item select {
+  background: transparent;
+
+  width: 50%;
+  padding: .2rem;
+
+  outline: none;
+  font-size: .7rem;
+  font-weight: 400;
+  border-radius: .2rem;
+}

@@ -1,7 +1,7 @@
 import './AddingNewList.css';
 
 type AddingNewListProps = {
-  onPost: (event: React.SubmitEvent<HTMLFormElement>) => void
+  onPost: (event: React.SubmitEvent<HTMLFormElement>) => void;
 }
 
 export const AddingNewList = ({onPost}: AddingNewListProps) => {

@@ -20,7 +20,6 @@ import {
 } from './Dashboard.data';
 
 export const Dashboard = () => {
-
   const [listArr, setListArr] = useState<ListApi[]>([]);
   const [itemArr, setItemArr] = useState<ItemApi[]>([]);
   const [isAddingNewList, setIsAddingNewList] = useState<boolean>(false);
